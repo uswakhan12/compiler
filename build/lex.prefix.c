@@ -446,8 +446,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "parser/prefix.l"
-#line 4 "parser/prefix.l"
+#line 1 "modules/module2_parser/prefix.l"
+#line 4 "modules/module2_parser/prefix.l"
 #include <stdlib.h>
 #include "prefix.tab.h"
 #line 453 "build/lex.prefix.c"
@@ -668,7 +668,7 @@ YY_DECL
 		}
 
 	{
-#line 8 "parser/prefix.l"
+#line 8 "modules/module2_parser/prefix.l"
 
 
 #line 674 "build/lex.prefix.c"
@@ -730,33 +730,33 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "parser/prefix.l"
+#line 10 "modules/module2_parser/prefix.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "parser/prefix.l"
+#line 11 "modules/module2_parser/prefix.l"
 { yylval.ival = atoi(yytext); return NUM; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 12 "parser/prefix.l"
+#line 12 "modules/module2_parser/prefix.l"
 { return yytext[0]; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 13 "parser/prefix.l"
+#line 13 "modules/module2_parser/prefix.l"
 { return ENDL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 14 "parser/prefix.l"
+#line 14 "modules/module2_parser/prefix.l"
 { fprintf(stderr, "bad token %s\n", yytext); return 0; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "parser/prefix.l"
+#line 16 "modules/module2_parser/prefix.l"
 ECHO;
 	YY_BREAK
 #line 762 "build/lex.prefix.c"
@@ -1764,6 +1764,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 16 "parser/prefix.l"
+#line 16 "modules/module2_parser/prefix.l"
 
 

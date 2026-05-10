@@ -64,7 +64,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 8 "parser/prefix.y"
+#line 8 "modules/module2_parser/prefix.y"
  int ival; 
 
 #line 71 "build/prefix.tab.h"

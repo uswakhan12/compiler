@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser/prefix.y"
+#line 1 "modules/module2_parser/prefix.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1063,31 +1063,31 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: expr ENDL  */
-#line 22 "parser/prefix.y"
+#line 22 "modules/module2_parser/prefix.y"
               { printf("Prefix result: %d\n\n", (yyvsp[-1].ival)); }
 #line 1069 "build/prefix.tab.c"
     break;
 
   case 5: /* expr: '+' expr expr  */
-#line 26 "parser/prefix.y"
+#line 26 "modules/module2_parser/prefix.y"
                   { (yyval.ival) = (yyvsp[-1].ival) + (yyvsp[0].ival); printf("+ %d %d -> %d\n", (yyvsp[-1].ival), (yyvsp[0].ival), (yyval.ival)); }
 #line 1075 "build/prefix.tab.c"
     break;
 
   case 6: /* expr: '-' expr expr  */
-#line 27 "parser/prefix.y"
+#line 27 "modules/module2_parser/prefix.y"
                     { (yyval.ival) = (yyvsp[-1].ival) - (yyvsp[0].ival); printf("- %d %d -> %d\n", (yyvsp[-1].ival), (yyvsp[0].ival), (yyval.ival)); }
 #line 1081 "build/prefix.tab.c"
     break;
 
   case 7: /* expr: '*' expr expr  */
-#line 28 "parser/prefix.y"
+#line 28 "modules/module2_parser/prefix.y"
                     { (yyval.ival) = (yyvsp[-1].ival) * (yyvsp[0].ival); printf("* %d %d -> %d\n", (yyvsp[-1].ival), (yyvsp[0].ival), (yyval.ival)); }
 #line 1087 "build/prefix.tab.c"
     break;
 
   case 8: /* expr: NUM  */
-#line 29 "parser/prefix.y"
+#line 29 "modules/module2_parser/prefix.y"
           { (yyval.ival) = (yyvsp[0].ival); }
 #line 1093 "build/prefix.tab.c"
     break;
@@ -1286,7 +1286,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 32 "parser/prefix.y"
+#line 32 "modules/module2_parser/prefix.y"
 
 
 void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }

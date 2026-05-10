@@ -67,23 +67,100 @@
 
 
 /* First part of user prologue.  */
-#line 1 "modules/module3_extended/extended.y"
+#line 17 "modules/module2_parser/parse_tree.y"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 int yylex(void);
 void yyerror(const char *s);
 
-/* Module 3 — enable Bison debug traces (required by the project spec).
-   Setting `yydebug = 1` at runtime causes Bison to print every shift /
-   reduce / token-lookahead it performs.  Override with the environment
-   variable YYDEBUG=0 to silence. */
-#define YYDEBUG 1
-extern int yydebug;
+typedef struct Node Node;
+struct Node {
+    char *label;     /* operator string or non-terminal name */
+    int   is_leaf;   /* 1 = number leaf (use ival) */
+    int   ival;
+    Node *kids[8];
+    int   nkids;
+};
 
-#line 87 "build/extended.tab.c"
+static Node *mknode(const char *label) {
+    Node *n = (Node *)calloc(1, sizeof(Node));
+    n->label = strdup(label);
+    return n;
+}
+static Node *mknum(int v) {
+    Node *n = mknode("NUM");
+    n->is_leaf = 1; n->ival = v;
+    return n;
+}
+static Node *add_kid(Node *p, Node *c) {
+    if (c && p->nkids < 8) p->kids[p->nkids++] = c;
+    return p;
+}
+
+/* ---------- Parse-tree print (verbose, indented) ---------- */
+static void print_parse_tree(Node *n, int depth) {
+    if (!n) return;
+    for (int i = 0; i < depth; i++) fputs("  ", stdout);
+    if (n->is_leaf) printf("NUM(%d)\n", n->ival);
+    else printf("%s\n", n->label);
+    for (int i = 0; i < n->nkids; i++) print_parse_tree(n->kids[i], depth + 1);
+}
+
+/* ---------- Syntax-tree (drop chain nodes) ---------- */
+static Node *to_syntax_tree(Node *n) {
+    if (!n) return NULL;
+    if (n->is_leaf) return n;
+    /* If this is a non-terminal chain (single child), skip it. */
+    if (n->nkids == 1 && n->label[0] != '+' && n->label[0] != '-' &&
+        n->label[0] != '*' && n->label[0] != '/') {
+        return to_syntax_tree(n->kids[0]);
+    }
+    Node *out = mknode(n->label);
+    for (int i = 0; i < n->nkids; i++) {
+        Node *c = to_syntax_tree(n->kids[i]);
+        if (c) add_kid(out, c);
+    }
+    return out;
+}
+static void print_syntax_tree(Node *n, int depth) {
+    if (!n) return;
+    for (int i = 0; i < depth; i++) fputs("  ", stdout);
+    if (n->is_leaf) printf("%d\n", n->ival);
+    else printf("%s\n", n->label);
+    for (int i = 0; i < n->nkids; i++) print_syntax_tree(n->kids[i], depth + 1);
+}
+
+/* ---------- Traversals on syntax tree ---------- */
+static void preorder(Node *n) {
+    if (!n) return;
+    if (n->is_leaf) printf("%d ", n->ival);
+    else printf("%s ", n->label);
+    for (int i = 0; i < n->nkids; i++) preorder(n->kids[i]);
+}
+static void inorder(Node *n) {
+    if (!n) return;
+    if (n->is_leaf) { printf("%d ", n->ival); return; }
+    if (n->nkids == 2) {
+        printf("( "); inorder(n->kids[0]);
+        printf("%s ", n->label);
+        inorder(n->kids[1]); printf(") ");
+    } else {
+        printf("%s ", n->label);
+        for (int i = 0; i < n->nkids; i++) inorder(n->kids[i]);
+    }
+}
+static void postorder(Node *n) {
+    if (!n) return;
+    for (int i = 0; i < n->nkids; i++) postorder(n->kids[i]);
+    if (n->is_leaf) printf("%d ", n->ival);
+    else printf("%s ", n->label);
+}
+
+static Node *g_root = NULL;
+
+#line 164 "build/parse_tree.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -106,7 +183,7 @@ extern int yydebug;
 #  endif
 # endif
 
-#include "extended.tab.h"
+#include "parse_tree.tab.h"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -115,20 +192,19 @@ enum yysymbol_kind_t
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_NUM = 3,                        /* NUM  */
-  YYSYMBOL_LOG = 4,                        /* LOG  */
-  YYSYMBOL_EXP = 5,                        /* EXP  */
-  YYSYMBOL_6_ = 6,                         /* '+'  */
-  YYSYMBOL_7_ = 7,                         /* '-'  */
-  YYSYMBOL_8_ = 8,                         /* '*'  */
-  YYSYMBOL_9_ = 9,                         /* '/'  */
-  YYSYMBOL_10_ = 10,                       /* '^'  */
-  YYSYMBOL_11_n_ = 11,                     /* '\n'  */
-  YYSYMBOL_12_ = 12,                       /* '('  */
-  YYSYMBOL_13_ = 13,                       /* ')'  */
-  YYSYMBOL_YYACCEPT = 14,                  /* $accept  */
-  YYSYMBOL_input = 15,                     /* input  */
-  YYSYMBOL_line = 16,                      /* line  */
-  YYSYMBOL_expr = 17                       /* expr  */
+  YYSYMBOL_ENDL = 4,                       /* ENDL  */
+  YYSYMBOL_5_ = 5,                         /* '+'  */
+  YYSYMBOL_6_ = 6,                         /* '-'  */
+  YYSYMBOL_7_ = 7,                         /* '*'  */
+  YYSYMBOL_8_ = 8,                         /* '/'  */
+  YYSYMBOL_9_ = 9,                         /* '('  */
+  YYSYMBOL_10_ = 10,                       /* ')'  */
+  YYSYMBOL_YYACCEPT = 11,                  /* $accept  */
+  YYSYMBOL_lines = 12,                     /* lines  */
+  YYSYMBOL_line = 13,                      /* line  */
+  YYSYMBOL_E = 14,                         /* E  */
+  YYSYMBOL_T = 15,                         /* T  */
+  YYSYMBOL_F = 16                          /* F  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -456,19 +532,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   53
+#define YYLAST   19
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  14
+#define YYNTOKENS  11
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  4
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  15
+#define YYNRULES  13
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  31
+#define YYNSTATES  21
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   260
+#define YYMAXUTOK   259
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -483,15 +559,10 @@ union yyalloc
 static const yytype_int8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      11,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      12,    13,     8,     6,     2,     7,     2,     9,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    10,     2,     2,     2,     2,     2,
+       9,    10,     7,     5,     2,     6,     2,     8,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -507,16 +578,20 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    33,    33,    34,    38,    39,    40,    44,    45,    46,
-      47,    48,    49,    50,    51,    52
+       0,   117,   117,   119,   123,   134,   138,   139,   140,   144,
+     145,   146,   150,   151
 };
 #endif
 
@@ -532,9 +607,9 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "NUM", "LOG", "EXP",
-  "'+'", "'-'", "'*'", "'/'", "'^'", "'\\n'", "'('", "')'", "$accept",
-  "input", "line", "expr", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "NUM", "ENDL", "'+'",
+  "'-'", "'*'", "'/'", "'('", "')'", "$accept", "lines", "line", "E", "T",
+  "F", YY_NULLPTR
 };
 
 static const char *
@@ -544,7 +619,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-10)
+#define YYPACT_NINF (-8)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -558,10 +633,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -10,     0,   -10,    -9,   -10,    -2,    14,   -10,     3,   -10,
-      39,   -10,     3,     3,    15,     3,     3,     3,     3,     3,
-     -10,    23,    31,   -10,    43,    43,    17,    17,    17,   -10,
-     -10
+      -8,     0,    -8,    -8,    -8,    -2,    -8,     8,     9,    -8,
+       5,    -8,    -2,    -2,    -2,    -2,    -8,     9,     9,    -8,
+      -8
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -569,22 +643,21 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       2,     0,     1,     0,    15,     0,     0,     5,     0,     3,
-       0,     6,     0,     0,     0,     0,     0,     0,     0,     0,
-       4,     0,     0,    12,     7,     8,     9,    10,    11,    13,
-      14
+       2,     0,     1,    13,     5,     0,     3,     0,     8,    11,
+       0,     4,     0,     0,     0,     0,    12,     6,     7,     9,
+      10
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -10,   -10,   -10,     1
+      -8,    -8,    -8,    -3,    -7,     4
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     1,     9,    10
+       0,     1,     6,     7,     8,     9
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -592,46 +665,37 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       2,     3,    11,     4,     5,     6,     4,     5,     6,    14,
-      12,     7,     8,    21,    22,     8,    24,    25,    26,    27,
-      28,    15,    16,    17,    18,    19,    13,    19,    23,    15,
-      16,    17,    18,    19,     0,     0,    29,    15,    16,    17,
-      18,    19,     0,     0,    30,    15,    16,    17,    18,    19,
-      20,    17,    18,    19
+       2,     3,    10,     3,     4,    17,    18,     5,     0,     5,
+      12,    13,    11,    12,    13,    16,    14,    15,    19,    20
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,     1,    11,     3,     4,     5,     3,     4,     5,     8,
-      12,    11,    12,    12,    13,    12,    15,    16,    17,    18,
-      19,     6,     7,     8,     9,    10,    12,    10,    13,     6,
-       7,     8,     9,    10,    -1,    -1,    13,     6,     7,     8,
-       9,    10,    -1,    -1,    13,     6,     7,     8,     9,    10,
-      11,     8,     9,    10
+       0,     3,     5,     3,     4,    12,    13,     9,    -1,     9,
+       5,     6,     4,     5,     6,    10,     7,     8,    14,    15
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    15,     0,     1,     3,     4,     5,    11,    12,    16,
-      17,    11,    12,    12,    17,     6,     7,     8,     9,    10,
-      11,    17,    17,    13,    17,    17,    17,    17,    17,    13,
-      13
+       0,    12,     0,     3,     4,     9,    13,    14,    15,    16,
+      14,     4,     5,     6,     7,     8,    10,    15,    15,    16,
+      16
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    14,    15,    15,    16,    16,    16,    17,    17,    17,
-      17,    17,    17,    17,    17,    17
+       0,    11,    12,    12,    13,    13,    14,    14,    14,    15,
+      15,    15,    16,    16
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     0,     2,     2,     1,     2,     3,     3,     3,
-       3,     3,     3,     4,     4,     1
+       0,     2,     0,     2,     2,     1,     3,     3,     1,     3,
+       3,     1,     3,     1
 };
 
 
@@ -1094,74 +1158,72 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 4: /* line: expr '\n'  */
-#line 38 "modules/module3_extended/extended.y"
-              { printf("= %.6g\n", (yyvsp[-1].val)); }
-#line 1101 "build/extended.tab.c"
+  case 4: /* line: E ENDL  */
+#line 123 "modules/module2_parser/parse_tree.y"
+           {
+        printf("\n=== PARSE TREE (verbose) ===\n");
+        print_parse_tree((yyvsp[-1].node), 0);
+        Node *st = to_syntax_tree((yyvsp[-1].node));
+        printf("=== SYNTAX TREE (compact) ===\n");
+        print_syntax_tree(st, 0);
+        printf("Pre-order  (prefix) : "); preorder(st);  printf("\n");
+        printf("In-order   (infix)  : "); inorder(st);   printf("\n");
+        printf("Post-order (postfix): "); postorder(st); printf("\n\n");
+        g_root = NULL;
+    }
+#line 1175 "build/parse_tree.tab.c"
     break;
 
-  case 6: /* line: error '\n'  */
-#line 40 "modules/module3_extended/extended.y"
-                 { yyerrok; }
-#line 1107 "build/extended.tab.c"
+  case 6: /* E: E '+' T  */
+#line 138 "modules/module2_parser/parse_tree.y"
+            { Node *n = mknode("+"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
+#line 1181 "build/parse_tree.tab.c"
     break;
 
-  case 7: /* expr: expr '+' expr  */
-#line 44 "modules/module3_extended/extended.y"
-                  { (yyval.val) = (yyvsp[-2].val) + (yyvsp[0].val); }
-#line 1113 "build/extended.tab.c"
+  case 7: /* E: E '-' T  */
+#line 139 "modules/module2_parser/parse_tree.y"
+            { Node *n = mknode("-"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
+#line 1187 "build/parse_tree.tab.c"
     break;
 
-  case 8: /* expr: expr '-' expr  */
-#line 45 "modules/module3_extended/extended.y"
-                    { (yyval.val) = (yyvsp[-2].val) - (yyvsp[0].val); }
-#line 1119 "build/extended.tab.c"
+  case 8: /* E: T  */
+#line 140 "modules/module2_parser/parse_tree.y"
+            { Node *n = mknode("E"); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
+#line 1193 "build/parse_tree.tab.c"
     break;
 
-  case 9: /* expr: expr '*' expr  */
-#line 46 "modules/module3_extended/extended.y"
-                    { (yyval.val) = (yyvsp[-2].val) * (yyvsp[0].val); }
-#line 1125 "build/extended.tab.c"
+  case 9: /* T: T '*' F  */
+#line 144 "modules/module2_parser/parse_tree.y"
+            { Node *n = mknode("*"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
+#line 1199 "build/parse_tree.tab.c"
     break;
 
-  case 10: /* expr: expr '/' expr  */
-#line 47 "modules/module3_extended/extended.y"
-                    { (yyval.val) = (yyvsp[-2].val) / (yyvsp[0].val); }
-#line 1131 "build/extended.tab.c"
+  case 10: /* T: T '/' F  */
+#line 145 "modules/module2_parser/parse_tree.y"
+            { Node *n = mknode("/"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
+#line 1205 "build/parse_tree.tab.c"
     break;
 
-  case 11: /* expr: expr '^' expr  */
-#line 48 "modules/module3_extended/extended.y"
-                    { (yyval.val) = pow((yyvsp[-2].val), (yyvsp[0].val)); }
-#line 1137 "build/extended.tab.c"
+  case 11: /* T: F  */
+#line 146 "modules/module2_parser/parse_tree.y"
+            { Node *n = mknode("T"); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
+#line 1211 "build/parse_tree.tab.c"
     break;
 
-  case 12: /* expr: '(' expr ')'  */
-#line 49 "modules/module3_extended/extended.y"
-                    { (yyval.val) = (yyvsp[-1].val); }
-#line 1143 "build/extended.tab.c"
+  case 12: /* F: '(' E ')'  */
+#line 150 "modules/module2_parser/parse_tree.y"
+              { Node *n = mknode("F"); add_kid(n,(yyvsp[-1].node)); (yyval.node) = n; }
+#line 1217 "build/parse_tree.tab.c"
     break;
 
-  case 13: /* expr: LOG '(' expr ')'  */
-#line 50 "modules/module3_extended/extended.y"
-                       { (yyval.val) = log((yyvsp[-1].val)); }
-#line 1149 "build/extended.tab.c"
-    break;
-
-  case 14: /* expr: EXP '(' expr ')'  */
-#line 51 "modules/module3_extended/extended.y"
-                       { (yyval.val) = exp((yyvsp[-1].val)); }
-#line 1155 "build/extended.tab.c"
-    break;
-
-  case 15: /* expr: NUM  */
-#line 52 "modules/module3_extended/extended.y"
-          { (yyval.val) = (yyvsp[0].val); }
-#line 1161 "build/extended.tab.c"
+  case 13: /* F: NUM  */
+#line 151 "modules/module2_parser/parse_tree.y"
+              { Node *n = mknode("F"); add_kid(n, mknum((yyvsp[0].ival))); (yyval.node) = n; }
+#line 1223 "build/parse_tree.tab.c"
     break;
 
 
-#line 1165 "build/extended.tab.c"
+#line 1227 "build/parse_tree.tab.c"
 
       default: break;
     }
@@ -1354,18 +1416,12 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 55 "modules/module3_extended/extended.y"
+#line 154 "modules/module2_parser/parse_tree.y"
 
 
-void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }
+void yyerror(const char *s) { fprintf(stderr, "parse error: %s\n", s); }
 
-int main(int argc, char **argv) {
-    /* `--debug` or env YYDEBUG=1 turns on Bison's shift/reduce traces. */
-    const char *env = getenv("YYDEBUG");
-    if (env && env[0] == '1') yydebug = 1;
-    for (int i = 1; i < argc; i++)
-        if (strcmp(argv[i], "--debug") == 0) yydebug = 1;
-    printf("Extended arithmetic: + - * / ^ log() exp() on floating literals.\n");
-    if (yydebug) printf("(YYDEBUG enabled — Bison trace will follow)\n");
+int main(void) {
+    printf("Module 2 parse-tree demo. Type an expression and press Enter:\n");
     return yyparse();
 }

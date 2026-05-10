@@ -1,0 +1,7 @@
+# Module 4 — target expression grammar from the project spec.
+# Use 'epsilon' for empty productions.
+E  -> T Ep
+Ep -> + T Ep | - T Ep | epsilon
+T  -> F Tp
+Tp -> * F Tp | / F Tp | epsilon
+F  -> ( E ) | id | num

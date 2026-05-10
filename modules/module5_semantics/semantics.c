@@ -33,6 +33,19 @@ static ValueType check_expr(AstNode *e) {
         e->inferred_type = s->type;
         return s->type;
     }
+    case AST_ARR_INDEX: {
+        Symbol *s = symtab_lookup(e->u.arr_index.name);
+        if (!s) {
+            sem_err(e->line, "use of undeclared array");
+            e->inferred_type = TYPE_INT;
+            return TYPE_INT;
+        }
+        ValueType it = check_expr(e->u.arr_index.index);
+        if (it != TYPE_INT)
+            sem_err(e->line, "array index must be an integer");
+        e->inferred_type = s->type;
+        return s->type;
+    }
     case AST_UNARY:
         if (e->u.unary.op == '-') {
             ValueType t = check_expr(e->u.unary.child);
@@ -71,6 +84,22 @@ static void check_stmt(AstNode *s) {
         if (!symtab_insert(s->u.decl.name, s->u.decl.decl_type))
             sem_err(s->line, "redeclaration in same scope");
         break;
+    case AST_ARR_DECL:
+        if (!symtab_insert(s->u.arr_decl.name, s->u.arr_decl.elem_type))
+            sem_err(s->line, "redeclaration in same scope");
+        break;
+    case AST_ARR_ASSIGN: {
+        Symbol *sym = symtab_lookup(s->u.arr_assign.name);
+        if (!sym)
+            sem_err(s->line, "assignment to undeclared array");
+        ValueType it = check_expr(s->u.arr_assign.index);
+        if (it != TYPE_INT)
+            sem_err(s->line, "array index must be an integer");
+        ValueType rhs = check_expr(s->u.arr_assign.expr);
+        if (sym && sym->type == TYPE_INT && rhs == TYPE_FLOAT)
+            sem_err(s->line, "type mismatch: cannot store float into int array");
+        break;
+    }
     case AST_ASSIGN: {
         Symbol *sym = symtab_lookup(s->u.assign.name);
         if (!sym)

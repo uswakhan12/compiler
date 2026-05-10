@@ -23,6 +23,9 @@ typedef enum {
     TAC_OP_LABEL,
     TAC_OP_PARAM,
     TAC_OP_CALL,
+    TAC_OP_RETURN,
+    TAC_OP_ARR_LOAD,  /* result = arr[arg1]            */
+    TAC_OP_ARR_STORE, /* arr[arg1] = arg2  (result=arr)*/
     TAC_OP_LOG,
     TAC_OP_EXP,
     TAC_OP_NOP,

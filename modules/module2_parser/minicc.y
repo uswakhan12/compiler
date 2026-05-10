@@ -74,10 +74,13 @@ optional_else:
 decl_stmt:
     INT IDENTIFIER ';' { $$ = ast_decl(TYPE_INT, $2, yylineno); }
     | FLOAT IDENTIFIER ';' { $$ = ast_decl(TYPE_FLOAT, $2, yylineno); }
+    | INT IDENTIFIER '[' INTEGER_LITERAL ']' ';' { $$ = ast_arr_decl(TYPE_INT, $2, $4, yylineno); }
+    | FLOAT IDENTIFIER '[' INTEGER_LITERAL ']' ';' { $$ = ast_arr_decl(TYPE_FLOAT, $2, $4, yylineno); }
     ;
 
 assign_stmt:
     IDENTIFIER '=' expr ';' { $$ = ast_assign($1, $3, yylineno); }
+    | IDENTIFIER '[' expr ']' '=' expr ';' { $$ = ast_arr_assign($1, $3, $6, yylineno); }
     ;
 
 block:
@@ -104,6 +107,7 @@ expr:
     | '(' expr ')' { $$ = $2; }
     | LOG '(' expr ')' { $$ = ast_call(1, $3, yylineno); }
     | EXP '(' expr ')' { $$ = ast_call(0, $3, yylineno); }
+    | IDENTIFIER '[' expr ']' { $$ = ast_arr_index($1, $3, yylineno); }
     ;
 
 %%

@@ -39,7 +39,7 @@
 # define YY_YY_BUILD_EXTENDED_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -65,7 +65,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 9 "parser/extended.y"
+#line 17 "modules/module3_extended/extended.y"
 
     double val;
     char *id;

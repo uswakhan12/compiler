@@ -445,8 +445,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "parser/infix.l"
-#line 4 "parser/infix.l"
+#line 1 "modules/module2_parser/infix.l"
+#line 4 "modules/module2_parser/infix.l"
 #include <stdlib.h>
 #include "infix.tab.h"
 #line 452 "build/lex.infix.c"
@@ -667,7 +667,7 @@ YY_DECL
 		}
 
 	{
-#line 8 "parser/infix.l"
+#line 8 "modules/module2_parser/infix.l"
 
 
 #line 673 "build/lex.infix.c"
@@ -729,28 +729,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "parser/infix.l"
+#line 10 "modules/module2_parser/infix.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "parser/infix.l"
+#line 11 "modules/module2_parser/infix.l"
 { yylval.ival = atoi(yytext); return NUM; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 12 "parser/infix.l"
+#line 12 "modules/module2_parser/infix.l"
 { return ENDL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 13 "parser/infix.l"
+#line 13 "modules/module2_parser/infix.l"
 { return yytext[0]; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "parser/infix.l"
+#line 15 "modules/module2_parser/infix.l"
 ECHO;
 	YY_BREAK
 #line 756 "build/lex.infix.c"
@@ -1758,6 +1758,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 15 "parser/infix.l"
+#line 15 "modules/module2_parser/infix.l"
 
 

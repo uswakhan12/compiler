@@ -26,7 +26,9 @@ typedef enum {
 typedef enum {
     AST_PROGRAM,
     AST_DECL,
+    AST_ARR_DECL,
     AST_ASSIGN,
+    AST_ARR_ASSIGN,
     AST_IF,
     AST_WHILE,
     AST_BLOCK,
@@ -36,6 +38,7 @@ typedef enum {
     AST_UNARY,
     AST_CALL,
     AST_VAR,
+    AST_ARR_INDEX,
     AST_INT_LIT,
     AST_FLOAT_LIT
 } AstKind;
@@ -56,6 +59,20 @@ struct AstNode {
             char *name;
             AstNode *expr;
         } assign;
+        struct {
+            char *name;
+            AstNode *index;
+            AstNode *expr;
+        } arr_assign;
+        struct {
+            ValueType elem_type;
+            char *name;
+            long long size;
+        } arr_decl;
+        struct {
+            char *name;
+            AstNode *index;
+        } arr_index;
         struct {
             AstNode *cond;
             AstNode *then_stmt;
@@ -102,6 +119,9 @@ struct AstNode {
 AstNode *ast_stmt_append(AstNode *head, AstNode *stmt);
 AstNode *ast_program(AstNode *stmts);
 AstNode *ast_decl(ValueType t, char *name, int line);
+AstNode *ast_arr_decl(ValueType elem, char *name, long long size, int line);
+AstNode *ast_arr_assign(char *name, AstNode *index, AstNode *expr, int line);
+AstNode *ast_arr_index(char *name, AstNode *index, int line);
 AstNode *ast_assign(char *name, AstNode *expr, int line);
 AstNode *ast_if(AstNode *cond, AstNode *then_s, AstNode *else_s, int line);
 AstNode *ast_while(AstNode *cond, AstNode *body, int line);

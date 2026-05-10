@@ -43,6 +43,29 @@ AstNode *ast_assign(char *name, AstNode *expr, int line) {
     return n;
 }
 
+AstNode *ast_arr_decl(ValueType elem, char *name, long long size, int line) {
+    AstNode *n = mk(AST_ARR_DECL, line);
+    n->u.arr_decl.elem_type = elem;
+    n->u.arr_decl.name = name;
+    n->u.arr_decl.size = size;
+    return n;
+}
+
+AstNode *ast_arr_assign(char *name, AstNode *index, AstNode *expr, int line) {
+    AstNode *n = mk(AST_ARR_ASSIGN, line);
+    n->u.arr_assign.name = name;
+    n->u.arr_assign.index = index;
+    n->u.arr_assign.expr = expr;
+    return n;
+}
+
+AstNode *ast_arr_index(char *name, AstNode *index, int line) {
+    AstNode *n = mk(AST_ARR_INDEX, line);
+    n->u.arr_index.name = name;
+    n->u.arr_index.index = index;
+    return n;
+}
+
 AstNode *ast_if(AstNode *cond, AstNode *then_s, AstNode *else_s, int line) {
     AstNode *n = mk(AST_IF, line);
     n->u.iff.cond = cond;
@@ -124,6 +147,18 @@ static void free_expr_tree(AstNode *n) {
     switch (n->kind) {
     case AST_DECL:
         free(n->u.decl.name);
+        break;
+    case AST_ARR_DECL:
+        free(n->u.arr_decl.name);
+        break;
+    case AST_ARR_ASSIGN:
+        free(n->u.arr_assign.name);
+        free_expr_tree(n->u.arr_assign.index);
+        free_expr_tree(n->u.arr_assign.expr);
+        break;
+    case AST_ARR_INDEX:
+        free(n->u.arr_index.name);
+        free_expr_tree(n->u.arr_index.index);
         break;
     case AST_ASSIGN:
         free(n->u.assign.name);

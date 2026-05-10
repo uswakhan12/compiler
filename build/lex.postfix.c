@@ -446,8 +446,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "parser/postfix.l"
-#line 4 "parser/postfix.l"
+#line 1 "modules/module2_parser/postfix.l"
+#line 4 "modules/module2_parser/postfix.l"
 #include <stdlib.h>
 #include "postfix.tab.h"
 #line 453 "build/lex.postfix.c"
@@ -668,7 +668,7 @@ YY_DECL
 		}
 
 	{
-#line 8 "parser/postfix.l"
+#line 8 "modules/module2_parser/postfix.l"
 
 
 #line 674 "build/lex.postfix.c"
@@ -730,33 +730,33 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "parser/postfix.l"
+#line 10 "modules/module2_parser/postfix.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "parser/postfix.l"
+#line 11 "modules/module2_parser/postfix.l"
 { yylval.ival = atoi(yytext); return NUM; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 12 "parser/postfix.l"
+#line 12 "modules/module2_parser/postfix.l"
 { return yytext[0]; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 13 "parser/postfix.l"
+#line 13 "modules/module2_parser/postfix.l"
 { return ENDL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 14 "parser/postfix.l"
+#line 14 "modules/module2_parser/postfix.l"
 { fprintf(stderr, "bad token %s\n", yytext); return 0; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "parser/postfix.l"
+#line 16 "modules/module2_parser/postfix.l"
 ECHO;
 	YY_BREAK
 #line 762 "build/lex.postfix.c"
@@ -1764,6 +1764,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 16 "parser/postfix.l"
+#line 16 "modules/module2_parser/postfix.l"
 
 

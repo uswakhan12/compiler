@@ -55,6 +55,8 @@ static int comment_depth = 0;
 ","                     { return ','; }
 "{"                     { return '{'; }
 "}"                     { return '}'; }
+"["                     { return '['; }
+"]"                     { return ']'; }
 "<"                     { return '<'; }
 ">"                     { return '>'; }
 

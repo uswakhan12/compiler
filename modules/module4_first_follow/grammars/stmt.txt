@@ -1,0 +1,8 @@
+# A larger example: a tiny statement grammar to exercise the LL(1) tool.
+S   -> id = E ; | if ( E ) S | while ( E ) S | { L }
+L   -> S L | epsilon
+E   -> T Ep
+Ep  -> + T Ep | - T Ep | epsilon
+T   -> F Tp
+Tp  -> * F Tp | / F Tp | epsilon
+F   -> ( E ) | id | num

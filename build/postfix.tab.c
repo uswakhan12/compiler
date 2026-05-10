@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser/postfix.y"
+#line 1 "modules/module2_parser/postfix.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1084,37 +1084,37 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: rpn ENDL  */
-#line 45 "parser/postfix.y"
+#line 45 "modules/module2_parser/postfix.y"
              { printf("Final result: %d\n\n", top()); sp = 0; }
 #line 1090 "build/postfix.tab.c"
     break;
 
   case 5: /* rpn: rpn NUM  */
-#line 49 "parser/postfix.y"
+#line 49 "modules/module2_parser/postfix.y"
             { push((yyvsp[0].ival)); }
 #line 1096 "build/postfix.tab.c"
     break;
 
   case 6: /* rpn: rpn '+'  */
-#line 50 "parser/postfix.y"
+#line 50 "modules/module2_parser/postfix.y"
               { int b = pop(); int a = pop(); push(a + b); printf("apply +\n"); }
 #line 1102 "build/postfix.tab.c"
     break;
 
   case 7: /* rpn: rpn '-'  */
-#line 51 "parser/postfix.y"
+#line 51 "modules/module2_parser/postfix.y"
               { int b = pop(); int a = pop(); push(a - b); printf("apply -\n"); }
 #line 1108 "build/postfix.tab.c"
     break;
 
   case 8: /* rpn: rpn '*'  */
-#line 52 "parser/postfix.y"
+#line 52 "modules/module2_parser/postfix.y"
               { int b = pop(); int a = pop(); push(a * b); printf("apply *\n"); }
 #line 1114 "build/postfix.tab.c"
     break;
 
   case 9: /* rpn: NUM  */
-#line 53 "parser/postfix.y"
+#line 53 "modules/module2_parser/postfix.y"
           { push((yyvsp[0].ival)); }
 #line 1120 "build/postfix.tab.c"
     break;
@@ -1313,7 +1313,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 56 "parser/postfix.y"
+#line 56 "modules/module2_parser/postfix.y"
 
 
 void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }

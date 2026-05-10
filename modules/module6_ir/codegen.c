@@ -80,6 +80,14 @@ static char *gen_expr(TacProgram *p, AstNode *e) {
     }
     case AST_VAR:
         return strdup(e->u.var.name);
+    case AST_ARR_INDEX: {
+        char *idx = gen_expr(p, e->u.arr_index.index);
+        char *t = tac_new_temp(p);
+        /* TAC form:  t = name[idx]   (result, arg1=name, arg2=idx) */
+        tac_emit(p, TAC_OP_ARR_LOAD, t, e->u.arr_index.name, idx);
+        free(idx);
+        return t;
+    }
     case AST_UNARY: {
         char *c = gen_expr(p, e->u.unary.child);
         char *t = tac_new_temp(p);
@@ -155,6 +163,18 @@ static void gen_stmt(TacProgram *p, AstNode *s) {
         free(rhs);
         break;
     }
+    case AST_ARR_ASSIGN: {
+        char *idx = gen_expr(p, s->u.arr_assign.index);
+        char *rhs = gen_expr(p, s->u.arr_assign.expr);
+        /* TAC form:  name[idx] = rhs   (result=name, arg1=idx, arg2=rhs) */
+        tac_emit(p, TAC_OP_ARR_STORE, s->u.arr_assign.name, idx, rhs);
+        free(idx);
+        free(rhs);
+        break;
+    }
+    case AST_ARR_DECL:
+        /* declarations are pure symbol-table actions */
+        break;
     case AST_IF: {
         char *lelse = tac_new_label(p);
         char *lend = tac_new_label(p);

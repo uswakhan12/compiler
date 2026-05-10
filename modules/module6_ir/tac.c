@@ -162,6 +162,17 @@ void tac_print(const TacProgram *p) {
         case TAC_OP_CAST_INT_TO_FLOAT:
             printf("%s = (float)%s\n", in->result ? in->result : "_", in->arg1 ? in->arg1 : "");
             break;
+        case TAC_OP_ARR_LOAD:
+            printf("%s = %s[%s]\n", in->result ? in->result : "_", in->arg1 ? in->arg1 : "",
+                   in->arg2 ? in->arg2 : "");
+            break;
+        case TAC_OP_ARR_STORE:
+            printf("%s[%s] = %s\n", in->result ? in->result : "_", in->arg1 ? in->arg1 : "",
+                   in->arg2 ? in->arg2 : "");
+            break;
+        case TAC_OP_RETURN:
+            printf("return %s\n", in->arg1 ? in->arg1 : "");
+            break;
         default:
             if (in->arg2)
                 printf("%s = %s %s %s\n", in->result ? in->result : "_", in->arg1 ? in->arg1 : "",

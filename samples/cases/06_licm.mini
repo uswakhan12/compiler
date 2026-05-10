@@ -1,0 +1,12 @@
+int n;
+int i;
+int s;
+int k;
+n = 10;
+k = 3;
+i = 0;
+s = 0;
+while (i < n) {
+    s = s + (k * 4);
+    i = i + 1;
+}
