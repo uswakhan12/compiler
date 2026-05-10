@@ -29,22 +29,21 @@ Single-file pipeline
     ./minicc --emit-llvm=demo.ll samples/cases/01_arith.mini
     clang -Wno-override-module demo.ll -o demo_exe && ./demo_exe
 
-Layout
+Layout (matches the spec's recommended directory structure)
 ------
-    modules/module1_lexer/        (Module 1)
-    modules/module2_parser/       (Module 2)
-    modules/module3_extended/     (Module 3)
-    modules/module4_first_follow/ (Module 4)
-    modules/module5_semantics/    (Module 5)
-    modules/module6_ir/           (Module 6)
-    modules/module7_optimizer/    (Module 7)
-    modules/module8_llvm/         (Module 8)
-    include/                      (shared headers)
-    src/                          (main.c, token_dump.c)
-    samples/                      (test inputs)
-    tools/                        (run-all / opt-bench scripts)
-
-Each module folder has its own README.md describing what it implements
-and how to run its tool.
+    lexer/          Module 1: lexer.l, lab05_lexer.l, postfix_eval.c
+    parser/         Modules 2 & 3: postfix/prefix/infix, parse_tree,
+                    minicc.y, extended grammar
+    first_follow/   Module 4: ll1, ll1_generic, grammars/*.txt
+    semantic/       Module 5: AST, symbol table, type & scope checker
+    ir/             Module 6: TAC + code generator
+    optimizer/      Module 7: optimisation passes (incl. LICM)
+    llvm/           Module 8: LLVM IR backend + Clang reference tests
+    include/        shared headers
+    src/            main.c, token_dump.c
+    samples/        test inputs (.mini)
+    tools/          run-all / opt-bench scripts
+    Makefile
+    README.txt
 
 See README.md for the full overview.

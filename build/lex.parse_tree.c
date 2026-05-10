@@ -445,8 +445,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "modules/module2_parser/parse_tree.l"
-#line 4 "modules/module2_parser/parse_tree.l"
+#line 1 "parser/parse_tree.l"
+#line 4 "parser/parse_tree.l"
 #include <stdlib.h>
 #include "parse_tree.tab.h"
 #line 452 "build/lex.parse_tree.c"
@@ -667,7 +667,7 @@ YY_DECL
 		}
 
 	{
-#line 8 "modules/module2_parser/parse_tree.l"
+#line 8 "parser/parse_tree.l"
 
 
 #line 673 "build/lex.parse_tree.c"
@@ -729,28 +729,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "modules/module2_parser/parse_tree.l"
+#line 10 "parser/parse_tree.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "modules/module2_parser/parse_tree.l"
+#line 11 "parser/parse_tree.l"
 { yylval.ival = atoi(yytext); return NUM; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 12 "modules/module2_parser/parse_tree.l"
+#line 12 "parser/parse_tree.l"
 { return ENDL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 13 "modules/module2_parser/parse_tree.l"
+#line 13 "parser/parse_tree.l"
 { return yytext[0]; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "modules/module2_parser/parse_tree.l"
+#line 15 "parser/parse_tree.l"
 ECHO;
 	YY_BREAK
 #line 756 "build/lex.parse_tree.c"
@@ -1758,6 +1758,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 15 "modules/module2_parser/parse_tree.l"
+#line 15 "parser/parse_tree.l"
 
 

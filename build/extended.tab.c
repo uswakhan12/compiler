@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "modules/module3_extended/extended.y"
+#line 1 "parser/extended.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1128,79 +1128,79 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: expr '\n'  */
-#line 68 "modules/module3_extended/extended.y"
+#line 68 "parser/extended.y"
                       { printf("= %.6g\n", (yyvsp[-1].val)); }
 #line 1134 "build/extended.tab.c"
     break;
 
   case 5: /* line: ID '=' expr '\n'  */
-#line 69 "modules/module3_extended/extended.y"
+#line 69 "parser/extended.y"
                        { var_set((yyvsp[-3].id), (yyvsp[-1].val)); printf("%s := %.6g\n", (yyvsp[-3].id), (yyvsp[-1].val)); free((yyvsp[-3].id)); }
 #line 1140 "build/extended.tab.c"
     break;
 
   case 7: /* line: error '\n'  */
-#line 71 "modules/module3_extended/extended.y"
+#line 71 "parser/extended.y"
                       { yyerrok; }
 #line 1146 "build/extended.tab.c"
     break;
 
   case 8: /* expr: expr '+' expr  */
-#line 75 "modules/module3_extended/extended.y"
+#line 75 "parser/extended.y"
                   { (yyval.val) = (yyvsp[-2].val) + (yyvsp[0].val); }
 #line 1152 "build/extended.tab.c"
     break;
 
   case 9: /* expr: expr '-' expr  */
-#line 76 "modules/module3_extended/extended.y"
+#line 76 "parser/extended.y"
                     { (yyval.val) = (yyvsp[-2].val) - (yyvsp[0].val); }
 #line 1158 "build/extended.tab.c"
     break;
 
   case 10: /* expr: expr '*' expr  */
-#line 77 "modules/module3_extended/extended.y"
+#line 77 "parser/extended.y"
                     { (yyval.val) = (yyvsp[-2].val) * (yyvsp[0].val); }
 #line 1164 "build/extended.tab.c"
     break;
 
   case 11: /* expr: expr '/' expr  */
-#line 78 "modules/module3_extended/extended.y"
+#line 78 "parser/extended.y"
                     { (yyval.val) = (yyvsp[-2].val) / (yyvsp[0].val); }
 #line 1170 "build/extended.tab.c"
     break;
 
   case 12: /* expr: expr '^' expr  */
-#line 79 "modules/module3_extended/extended.y"
+#line 79 "parser/extended.y"
                     { (yyval.val) = pow((yyvsp[-2].val), (yyvsp[0].val)); }
 #line 1176 "build/extended.tab.c"
     break;
 
   case 13: /* expr: '(' expr ')'  */
-#line 80 "modules/module3_extended/extended.y"
+#line 80 "parser/extended.y"
                     { (yyval.val) = (yyvsp[-1].val); }
 #line 1182 "build/extended.tab.c"
     break;
 
   case 14: /* expr: LOG '(' expr ')'  */
-#line 81 "modules/module3_extended/extended.y"
+#line 81 "parser/extended.y"
                        { (yyval.val) = log((yyvsp[-1].val)); }
 #line 1188 "build/extended.tab.c"
     break;
 
   case 15: /* expr: EXP '(' expr ')'  */
-#line 82 "modules/module3_extended/extended.y"
+#line 82 "parser/extended.y"
                        { (yyval.val) = exp((yyvsp[-1].val)); }
 #line 1194 "build/extended.tab.c"
     break;
 
   case 16: /* expr: NUM  */
-#line 83 "modules/module3_extended/extended.y"
+#line 83 "parser/extended.y"
           { (yyval.val) = (yyvsp[0].val); }
 #line 1200 "build/extended.tab.c"
     break;
 
   case 17: /* expr: ID  */
-#line 84 "modules/module3_extended/extended.y"
+#line 84 "parser/extended.y"
           { (yyval.val) = var_lookup((yyvsp[0].id)); free((yyvsp[0].id)); }
 #line 1206 "build/extended.tab.c"
     break;
@@ -1399,7 +1399,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 87 "modules/module3_extended/extended.y"
+#line 87 "parser/extended.y"
 
 
 void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }

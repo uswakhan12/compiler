@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "modules/module2_parser/infix.y"
+#line 1 "parser/infix.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1073,49 +1073,49 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: expr ENDL  */
-#line 26 "modules/module2_parser/infix.y"
+#line 26 "parser/infix.y"
               { printf("Infix result: %d\n\n", (yyvsp[-1].ival)); }
 #line 1079 "build/infix.tab.c"
     break;
 
   case 5: /* expr: expr '+' expr  */
-#line 30 "modules/module2_parser/infix.y"
+#line 30 "parser/infix.y"
                   { (yyval.ival) = (yyvsp[-2].ival) + (yyvsp[0].ival); }
 #line 1085 "build/infix.tab.c"
     break;
 
   case 6: /* expr: expr '-' expr  */
-#line 31 "modules/module2_parser/infix.y"
+#line 31 "parser/infix.y"
                     { (yyval.ival) = (yyvsp[-2].ival) - (yyvsp[0].ival); }
 #line 1091 "build/infix.tab.c"
     break;
 
   case 7: /* expr: expr '*' expr  */
-#line 32 "modules/module2_parser/infix.y"
+#line 32 "parser/infix.y"
                     { (yyval.ival) = (yyvsp[-2].ival) * (yyvsp[0].ival); }
 #line 1097 "build/infix.tab.c"
     break;
 
   case 8: /* expr: expr '/' expr  */
-#line 33 "modules/module2_parser/infix.y"
+#line 33 "parser/infix.y"
                     { (yyval.ival) = (yyvsp[-2].ival) / (yyvsp[0].ival); }
 #line 1103 "build/infix.tab.c"
     break;
 
   case 9: /* expr: expr '^' expr  */
-#line 34 "modules/module2_parser/infix.y"
+#line 34 "parser/infix.y"
                     { int b = (int)(yyvsp[0].ival), a = (int)(yyvsp[-2].ival), r = 1, i; for (i = 0; i < b; i++) r *= a; (yyval.ival) = r; }
 #line 1109 "build/infix.tab.c"
     break;
 
   case 10: /* expr: '(' expr ')'  */
-#line 35 "modules/module2_parser/infix.y"
+#line 35 "parser/infix.y"
                    { (yyval.ival) = (yyvsp[-1].ival); }
 #line 1115 "build/infix.tab.c"
     break;
 
   case 11: /* expr: NUM  */
-#line 36 "modules/module2_parser/infix.y"
+#line 36 "parser/infix.y"
           { (yyval.ival) = (yyvsp[0].ival); }
 #line 1121 "build/infix.tab.c"
     break;
@@ -1314,7 +1314,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 39 "modules/module2_parser/infix.y"
+#line 39 "parser/infix.y"
 
 
 void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }

@@ -519,8 +519,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "modules/module1_lexer/lexer.l"
-#line 5 "modules/module1_lexer/lexer.l"
+#line 1 "lexer/lexer.l"
+#line 5 "lexer/lexer.l"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -748,7 +748,7 @@ YY_DECL
 		}
 
 	{
-#line 16 "modules/module1_lexer/lexer.l"
+#line 16 "lexer/lexer.l"
 
 
 #line 754 "build/lex.minicc.c"
@@ -821,193 +821,193 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 18 "modules/module1_lexer/lexer.l"
+#line 18 "lexer/lexer.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "modules/module1_lexer/lexer.l"
+#line 20 "lexer/lexer.l"
 
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "modules/module1_lexer/lexer.l"
+#line 22 "lexer/lexer.l"
 { comment_depth = 1; BEGIN(COMMENT); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "modules/module1_lexer/lexer.l"
+#line 23 "lexer/lexer.l"
 { comment_depth++; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 24 "modules/module1_lexer/lexer.l"
+#line 24 "lexer/lexer.l"
 { comment_depth--; if (comment_depth == 0) BEGIN(0); }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 25 "modules/module1_lexer/lexer.l"
+#line 25 "lexer/lexer.l"
 { /* skip */ }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 27 "modules/module1_lexer/lexer.l"
+#line 27 "lexer/lexer.l"
 { return INT; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 28 "modules/module1_lexer/lexer.l"
+#line 28 "lexer/lexer.l"
 { return FLOAT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 29 "modules/module1_lexer/lexer.l"
+#line 29 "lexer/lexer.l"
 { return IF; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 30 "modules/module1_lexer/lexer.l"
+#line 30 "lexer/lexer.l"
 { return ELSE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 31 "modules/module1_lexer/lexer.l"
+#line 31 "lexer/lexer.l"
 { return WHILE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 32 "modules/module1_lexer/lexer.l"
+#line 32 "lexer/lexer.l"
 { return RETURN; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 33 "modules/module1_lexer/lexer.l"
+#line 33 "lexer/lexer.l"
 { return LOG; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 34 "modules/module1_lexer/lexer.l"
+#line 34 "lexer/lexer.l"
 { return EXP; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 36 "modules/module1_lexer/lexer.l"
+#line 36 "lexer/lexer.l"
 { return EQ; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 37 "modules/module1_lexer/lexer.l"
+#line 37 "lexer/lexer.l"
 { return NE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 38 "modules/module1_lexer/lexer.l"
+#line 38 "lexer/lexer.l"
 { return LE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 39 "modules/module1_lexer/lexer.l"
+#line 39 "lexer/lexer.l"
 { return GE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 40 "modules/module1_lexer/lexer.l"
+#line 40 "lexer/lexer.l"
 { return '='; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 42 "modules/module1_lexer/lexer.l"
+#line 42 "lexer/lexer.l"
 { yylval.str = strdup(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 44 "modules/module1_lexer/lexer.l"
+#line 44 "lexer/lexer.l"
 { yylval.fval = strtod(yytext, NULL); return FLOAT_LITERAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 45 "modules/module1_lexer/lexer.l"
+#line 45 "lexer/lexer.l"
 { yylval.ival = atoll(yytext); return INTEGER_LITERAL; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 47 "modules/module1_lexer/lexer.l"
+#line 47 "lexer/lexer.l"
 { return '+'; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 48 "modules/module1_lexer/lexer.l"
+#line 48 "lexer/lexer.l"
 { return '-'; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 49 "modules/module1_lexer/lexer.l"
+#line 49 "lexer/lexer.l"
 { return '*'; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 50 "modules/module1_lexer/lexer.l"
+#line 50 "lexer/lexer.l"
 { return '/'; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 51 "modules/module1_lexer/lexer.l"
+#line 51 "lexer/lexer.l"
 { return '^'; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 52 "modules/module1_lexer/lexer.l"
+#line 52 "lexer/lexer.l"
 { return '('; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 53 "modules/module1_lexer/lexer.l"
+#line 53 "lexer/lexer.l"
 { return ')'; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 54 "modules/module1_lexer/lexer.l"
+#line 54 "lexer/lexer.l"
 { return ';'; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 55 "modules/module1_lexer/lexer.l"
+#line 55 "lexer/lexer.l"
 { return ','; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 56 "modules/module1_lexer/lexer.l"
+#line 56 "lexer/lexer.l"
 { return '{'; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 57 "modules/module1_lexer/lexer.l"
+#line 57 "lexer/lexer.l"
 { return '}'; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 58 "modules/module1_lexer/lexer.l"
+#line 58 "lexer/lexer.l"
 { return '['; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 59 "modules/module1_lexer/lexer.l"
+#line 59 "lexer/lexer.l"
 { return ']'; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 60 "modules/module1_lexer/lexer.l"
+#line 60 "lexer/lexer.l"
 { return '<'; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 61 "modules/module1_lexer/lexer.l"
+#line 61 "lexer/lexer.l"
 { return '>'; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 63 "modules/module1_lexer/lexer.l"
+#line 63 "lexer/lexer.l"
 {
     fprintf(stderr, "lexer error at line %d: unrecognized character '%s'\n", yylineno, yytext);
     return 0;
@@ -1015,7 +1015,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 68 "modules/module1_lexer/lexer.l"
+#line 68 "lexer/lexer.l"
 ECHO;
 	YY_BREAK
 #line 1021 "build/lex.minicc.c"
@@ -2036,6 +2036,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 68 "modules/module1_lexer/lexer.l"
+#line 68 "lexer/lexer.l"
 
 

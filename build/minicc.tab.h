@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "modules/module2_parser/minicc.y"
+#line 1 "parser/minicc.y"
 
 #include "ast.h"
 
@@ -84,7 +84,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 20 "modules/module2_parser/minicc.y"
+#line 20 "parser/minicc.y"
 
     AstNode *n;
     char *str;

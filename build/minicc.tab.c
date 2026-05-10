@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 7 "modules/module2_parser/minicc.y"
+#line 7 "parser/minicc.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1200,37 +1200,37 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: stmt_list  */
-#line 47 "modules/module2_parser/minicc.y"
+#line 47 "parser/minicc.y"
               { g_parse_result = ast_program((yyvsp[0].n)); }
 #line 1206 "build/minicc.tab.c"
     break;
 
   case 3: /* stmt_list: stmt  */
-#line 51 "modules/module2_parser/minicc.y"
+#line 51 "parser/minicc.y"
          { (yyval.n) = (yyvsp[0].n); }
 #line 1212 "build/minicc.tab.c"
     break;
 
   case 4: /* stmt_list: stmt_list stmt  */
-#line 52 "modules/module2_parser/minicc.y"
+#line 52 "parser/minicc.y"
                      { (yyval.n) = ast_stmt_append((yyvsp[-1].n), (yyvsp[0].n)); }
 #line 1218 "build/minicc.tab.c"
     break;
 
   case 5: /* stmt: decl_stmt  */
-#line 56 "modules/module2_parser/minicc.y"
+#line 56 "parser/minicc.y"
               { (yyval.n) = (yyvsp[0].n); }
 #line 1224 "build/minicc.tab.c"
     break;
 
   case 6: /* stmt: assign_stmt  */
-#line 57 "modules/module2_parser/minicc.y"
+#line 57 "parser/minicc.y"
                   { (yyval.n) = (yyvsp[0].n); }
 #line 1230 "build/minicc.tab.c"
     break;
 
   case 7: /* stmt: IF '(' expr ')' stmt optional_else  */
-#line 58 "modules/module2_parser/minicc.y"
+#line 58 "parser/minicc.y"
                                          {
         (yyval.n) = ast_if((yyvsp[-3].n), (yyvsp[-1].n), (yyvsp[0].n), yylineno);
     }
@@ -1238,7 +1238,7 @@ yyreduce:
     break;
 
   case 8: /* stmt: WHILE '(' expr ')' stmt  */
-#line 61 "modules/module2_parser/minicc.y"
+#line 61 "parser/minicc.y"
                               {
         (yyval.n) = ast_while((yyvsp[-2].n), (yyvsp[0].n), yylineno);
     }
@@ -1246,193 +1246,193 @@ yyreduce:
     break;
 
   case 9: /* stmt: block  */
-#line 64 "modules/module2_parser/minicc.y"
+#line 64 "parser/minicc.y"
             { (yyval.n) = (yyvsp[0].n); }
 #line 1252 "build/minicc.tab.c"
     break;
 
   case 10: /* stmt: expr ';'  */
-#line 65 "modules/module2_parser/minicc.y"
+#line 65 "parser/minicc.y"
                { (yyval.n) = ast_expr_stmt((yyvsp[-1].n), yylineno); }
 #line 1258 "build/minicc.tab.c"
     break;
 
   case 11: /* stmt: RETURN expr ';'  */
-#line 66 "modules/module2_parser/minicc.y"
+#line 66 "parser/minicc.y"
                       { (yyval.n) = ast_return((yyvsp[-1].n), yylineno); }
 #line 1264 "build/minicc.tab.c"
     break;
 
   case 12: /* optional_else: %empty  */
-#line 70 "modules/module2_parser/minicc.y"
+#line 70 "parser/minicc.y"
                 { (yyval.n) = NULL; }
 #line 1270 "build/minicc.tab.c"
     break;
 
   case 13: /* optional_else: ELSE stmt  */
-#line 71 "modules/module2_parser/minicc.y"
+#line 71 "parser/minicc.y"
                 { (yyval.n) = (yyvsp[0].n); }
 #line 1276 "build/minicc.tab.c"
     break;
 
   case 14: /* decl_stmt: INT IDENTIFIER ';'  */
-#line 75 "modules/module2_parser/minicc.y"
+#line 75 "parser/minicc.y"
                        { (yyval.n) = ast_decl(TYPE_INT, (yyvsp[-1].str), yylineno); }
 #line 1282 "build/minicc.tab.c"
     break;
 
   case 15: /* decl_stmt: FLOAT IDENTIFIER ';'  */
-#line 76 "modules/module2_parser/minicc.y"
+#line 76 "parser/minicc.y"
                            { (yyval.n) = ast_decl(TYPE_FLOAT, (yyvsp[-1].str), yylineno); }
 #line 1288 "build/minicc.tab.c"
     break;
 
   case 16: /* decl_stmt: INT IDENTIFIER '[' INTEGER_LITERAL ']' ';'  */
-#line 77 "modules/module2_parser/minicc.y"
+#line 77 "parser/minicc.y"
                                                  { (yyval.n) = ast_arr_decl(TYPE_INT, (yyvsp[-4].str), (yyvsp[-2].ival), yylineno); }
 #line 1294 "build/minicc.tab.c"
     break;
 
   case 17: /* decl_stmt: FLOAT IDENTIFIER '[' INTEGER_LITERAL ']' ';'  */
-#line 78 "modules/module2_parser/minicc.y"
+#line 78 "parser/minicc.y"
                                                    { (yyval.n) = ast_arr_decl(TYPE_FLOAT, (yyvsp[-4].str), (yyvsp[-2].ival), yylineno); }
 #line 1300 "build/minicc.tab.c"
     break;
 
   case 18: /* assign_stmt: IDENTIFIER '=' expr ';'  */
-#line 82 "modules/module2_parser/minicc.y"
+#line 82 "parser/minicc.y"
                             { (yyval.n) = ast_assign((yyvsp[-3].str), (yyvsp[-1].n), yylineno); }
 #line 1306 "build/minicc.tab.c"
     break;
 
   case 19: /* assign_stmt: IDENTIFIER '[' expr ']' '=' expr ';'  */
-#line 83 "modules/module2_parser/minicc.y"
+#line 83 "parser/minicc.y"
                                            { (yyval.n) = ast_arr_assign((yyvsp[-6].str), (yyvsp[-4].n), (yyvsp[-1].n), yylineno); }
 #line 1312 "build/minicc.tab.c"
     break;
 
   case 20: /* block: '{' stmt_list '}'  */
-#line 87 "modules/module2_parser/minicc.y"
+#line 87 "parser/minicc.y"
                       { (yyval.n) = ast_block((yyvsp[-1].n), yylineno); }
 #line 1318 "build/minicc.tab.c"
     break;
 
   case 21: /* block: '{' '}'  */
-#line 88 "modules/module2_parser/minicc.y"
+#line 88 "parser/minicc.y"
               { (yyval.n) = ast_block(NULL, yylineno); }
 #line 1324 "build/minicc.tab.c"
     break;
 
   case 22: /* expr: INTEGER_LITERAL  */
-#line 92 "modules/module2_parser/minicc.y"
+#line 92 "parser/minicc.y"
                     { (yyval.n) = ast_int_lit((yyvsp[0].ival), yylineno); }
 #line 1330 "build/minicc.tab.c"
     break;
 
   case 23: /* expr: FLOAT_LITERAL  */
-#line 93 "modules/module2_parser/minicc.y"
+#line 93 "parser/minicc.y"
                     { (yyval.n) = ast_float_lit((yyvsp[0].fval), yylineno); }
 #line 1336 "build/minicc.tab.c"
     break;
 
   case 24: /* expr: IDENTIFIER  */
-#line 94 "modules/module2_parser/minicc.y"
+#line 94 "parser/minicc.y"
                  { (yyval.n) = ast_var((yyvsp[0].str), yylineno); }
 #line 1342 "build/minicc.tab.c"
     break;
 
   case 25: /* expr: expr '+' expr  */
-#line 95 "modules/module2_parser/minicc.y"
+#line 95 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_ADD, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1348 "build/minicc.tab.c"
     break;
 
   case 26: /* expr: expr '-' expr  */
-#line 96 "modules/module2_parser/minicc.y"
+#line 96 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_SUB, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1354 "build/minicc.tab.c"
     break;
 
   case 27: /* expr: expr '*' expr  */
-#line 97 "modules/module2_parser/minicc.y"
+#line 97 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_MUL, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1360 "build/minicc.tab.c"
     break;
 
   case 28: /* expr: expr '/' expr  */
-#line 98 "modules/module2_parser/minicc.y"
+#line 98 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_DIV, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1366 "build/minicc.tab.c"
     break;
 
   case 29: /* expr: expr '^' expr  */
-#line 99 "modules/module2_parser/minicc.y"
+#line 99 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_POW, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1372 "build/minicc.tab.c"
     break;
 
   case 30: /* expr: expr EQ expr  */
-#line 100 "modules/module2_parser/minicc.y"
+#line 100 "parser/minicc.y"
                    { (yyval.n) = ast_binop(AST_OP_EQ, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1378 "build/minicc.tab.c"
     break;
 
   case 31: /* expr: expr NE expr  */
-#line 101 "modules/module2_parser/minicc.y"
+#line 101 "parser/minicc.y"
                    { (yyval.n) = ast_binop(AST_OP_NE, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1384 "build/minicc.tab.c"
     break;
 
   case 32: /* expr: expr '<' expr  */
-#line 102 "modules/module2_parser/minicc.y"
+#line 102 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_LT, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1390 "build/minicc.tab.c"
     break;
 
   case 33: /* expr: expr '>' expr  */
-#line 103 "modules/module2_parser/minicc.y"
+#line 103 "parser/minicc.y"
                     { (yyval.n) = ast_binop(AST_OP_GT, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1396 "build/minicc.tab.c"
     break;
 
   case 34: /* expr: expr LE expr  */
-#line 104 "modules/module2_parser/minicc.y"
+#line 104 "parser/minicc.y"
                    { (yyval.n) = ast_binop(AST_OP_LE, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1402 "build/minicc.tab.c"
     break;
 
   case 35: /* expr: expr GE expr  */
-#line 105 "modules/module2_parser/minicc.y"
+#line 105 "parser/minicc.y"
                    { (yyval.n) = ast_binop(AST_OP_GE, (yyvsp[-2].n), (yyvsp[0].n), yylineno); }
 #line 1408 "build/minicc.tab.c"
     break;
 
   case 36: /* expr: '-' expr  */
-#line 106 "modules/module2_parser/minicc.y"
+#line 106 "parser/minicc.y"
                            { (yyval.n) = ast_unary('-', (yyvsp[0].n), yylineno); }
 #line 1414 "build/minicc.tab.c"
     break;
 
   case 37: /* expr: '(' expr ')'  */
-#line 107 "modules/module2_parser/minicc.y"
+#line 107 "parser/minicc.y"
                    { (yyval.n) = (yyvsp[-1].n); }
 #line 1420 "build/minicc.tab.c"
     break;
 
   case 38: /* expr: LOG '(' expr ')'  */
-#line 108 "modules/module2_parser/minicc.y"
+#line 108 "parser/minicc.y"
                        { (yyval.n) = ast_call(1, (yyvsp[-1].n), yylineno); }
 #line 1426 "build/minicc.tab.c"
     break;
 
   case 39: /* expr: EXP '(' expr ')'  */
-#line 109 "modules/module2_parser/minicc.y"
+#line 109 "parser/minicc.y"
                        { (yyval.n) = ast_call(0, (yyvsp[-1].n), yylineno); }
 #line 1432 "build/minicc.tab.c"
     break;
 
   case 40: /* expr: IDENTIFIER '[' expr ']'  */
-#line 110 "modules/module2_parser/minicc.y"
+#line 110 "parser/minicc.y"
                               { (yyval.n) = ast_arr_index((yyvsp[-3].str), (yyvsp[-1].n), yylineno); }
 #line 1438 "build/minicc.tab.c"
     break;
@@ -1631,7 +1631,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 113 "modules/module2_parser/minicc.y"
+#line 113 "parser/minicc.y"
 
 
 void yyerror(const char *s) {

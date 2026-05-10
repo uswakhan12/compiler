@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "modules/module2_parser/postfix.y"
+#line 1 "parser/postfix.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -135,10 +135,12 @@ enum yysymbol_kind_t
   YYSYMBOL_5_ = 5,                         /* '+'  */
   YYSYMBOL_6_ = 6,                         /* '-'  */
   YYSYMBOL_7_ = 7,                         /* '*'  */
-  YYSYMBOL_YYACCEPT = 8,                   /* $accept  */
-  YYSYMBOL_lines = 9,                      /* lines  */
-  YYSYMBOL_line = 10,                      /* line  */
-  YYSYMBOL_rpn = 11                        /* rpn  */
+  YYSYMBOL_8_ = 8,                         /* '/'  */
+  YYSYMBOL_9_ = 9,                         /* '^'  */
+  YYSYMBOL_YYACCEPT = 10,                  /* $accept  */
+  YYSYMBOL_lines = 11,                     /* lines  */
+  YYSYMBOL_line = 12,                      /* line  */
+  YYSYMBOL_rpn = 13                        /* rpn  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -466,16 +468,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   8
+#define YYLAST   10
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  8
+#define YYNTOKENS  10
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  9
+#define YYNRULES  11
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  11
+#define YYNSTATES  13
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   259
@@ -496,12 +498,12 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     7,     5,     2,     6,     2,     2,     2,     2,
+       2,     2,     7,     5,     2,     6,     2,     8,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     9,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -524,7 +526,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    39,    39,    41,    45,    49,    50,    51,    52,    53
+       0,    39,    39,    41,    45,    49,    50,    51,    52,    53,
+      54,    55
 };
 #endif
 
@@ -541,7 +544,7 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "NUM", "ENDL", "'+'",
-  "'-'", "'*'", "$accept", "lines", "line", "rpn", YY_NULLPTR
+  "'-'", "'*'", "'/'", "'^'", "$accept", "lines", "line", "rpn", YY_NULLPTR
 };
 
 static const char *
@@ -565,8 +568,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -4,     5,    -4,    -4,    -4,    -3,    -4,    -4,    -4,    -4,
-      -4
+      -4,     7,    -4,    -4,    -4,    -3,    -4,    -4,    -4,    -4,
+      -4,    -4,    -4
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -574,8 +577,8 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       2,     0,     1,     9,     3,     0,     5,     4,     6,     7,
-       8
+       2,     0,     1,    11,     3,     0,     5,     4,     6,     7,
+       8,     9,    10
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -595,32 +598,36 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       6,     7,     8,     9,    10,     2,     0,     0,     3
+       6,     7,     8,     9,    10,    11,    12,     2,     0,     0,
+       3
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     4,     5,     6,     7,     0,    -1,    -1,     3
+       3,     4,     5,     6,     7,     8,     9,     0,    -1,    -1,
+       3
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     9,     0,     3,    10,    11,     3,     4,     5,     6,
-       7
+       0,    11,     0,     3,    12,    13,     3,     4,     5,     6,
+       7,     8,     9
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     8,     9,     9,    10,    11,    11,    11,    11,    11
+       0,    10,    11,    11,    12,    13,    13,    13,    13,    13,
+      13,    13
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     0,     2,     2,     2,     2,     2,     2,     1
+       0,     2,     0,     2,     2,     2,     2,     2,     2,     2,
+       2,     1
 };
 
 
@@ -1084,43 +1091,55 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: rpn ENDL  */
-#line 45 "modules/module2_parser/postfix.y"
+#line 45 "parser/postfix.y"
              { printf("Final result: %d\n\n", top()); sp = 0; }
-#line 1090 "build/postfix.tab.c"
+#line 1097 "build/postfix.tab.c"
     break;
 
   case 5: /* rpn: rpn NUM  */
-#line 49 "modules/module2_parser/postfix.y"
+#line 49 "parser/postfix.y"
             { push((yyvsp[0].ival)); }
-#line 1096 "build/postfix.tab.c"
+#line 1103 "build/postfix.tab.c"
     break;
 
   case 6: /* rpn: rpn '+'  */
-#line 50 "modules/module2_parser/postfix.y"
+#line 50 "parser/postfix.y"
               { int b = pop(); int a = pop(); push(a + b); printf("apply +\n"); }
-#line 1102 "build/postfix.tab.c"
+#line 1109 "build/postfix.tab.c"
     break;
 
   case 7: /* rpn: rpn '-'  */
-#line 51 "modules/module2_parser/postfix.y"
+#line 51 "parser/postfix.y"
               { int b = pop(); int a = pop(); push(a - b); printf("apply -\n"); }
-#line 1108 "build/postfix.tab.c"
+#line 1115 "build/postfix.tab.c"
     break;
 
   case 8: /* rpn: rpn '*'  */
-#line 52 "modules/module2_parser/postfix.y"
+#line 52 "parser/postfix.y"
               { int b = pop(); int a = pop(); push(a * b); printf("apply *\n"); }
-#line 1114 "build/postfix.tab.c"
+#line 1121 "build/postfix.tab.c"
     break;
 
-  case 9: /* rpn: NUM  */
-#line 53 "modules/module2_parser/postfix.y"
+  case 9: /* rpn: rpn '/'  */
+#line 53 "parser/postfix.y"
+              { int b = pop(); int a = pop(); if (b == 0) { fprintf(stderr, "division by zero\n"); push(0); } else { push(a / b); } printf("apply /\n"); }
+#line 1127 "build/postfix.tab.c"
+    break;
+
+  case 10: /* rpn: rpn '^'  */
+#line 54 "parser/postfix.y"
+              { int b = pop(); int a = pop(); int r = 1; for (int i = 0; i < b; i++) r *= a; push(r); printf("apply ^\n"); }
+#line 1133 "build/postfix.tab.c"
+    break;
+
+  case 11: /* rpn: NUM  */
+#line 55 "parser/postfix.y"
           { push((yyvsp[0].ival)); }
-#line 1120 "build/postfix.tab.c"
+#line 1139 "build/postfix.tab.c"
     break;
 
 
-#line 1124 "build/postfix.tab.c"
+#line 1143 "build/postfix.tab.c"
 
       default: break;
     }
@@ -1313,12 +1332,12 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 56 "modules/module2_parser/postfix.y"
+#line 58 "parser/postfix.y"
 
 
 void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }
 
 int main(void) {
-    printf("Postfix calculator — enter integers and + - * (space-separated), end line with Enter.\n");
+    printf("Postfix calculator — enter integers and + - * / ^ (space-separated), end line with Enter.\n");
     return yyparse();
 }

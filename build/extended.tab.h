@@ -66,7 +66,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 46 "modules/module3_extended/extended.y"
+#line 46 "parser/extended.y"
 
     double val;
     char *id;

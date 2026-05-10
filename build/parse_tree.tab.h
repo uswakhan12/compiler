@@ -64,7 +64,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 110 "modules/module2_parser/parse_tree.y"
+#line 110 "parser/parse_tree.y"
  int ival; struct Node *node; 
 
 #line 71 "build/parse_tree.tab.h"

@@ -50,6 +50,8 @@ rpn:
     | rpn '+' { int b = pop(); int a = pop(); push(a + b); printf("apply +\n"); }
     | rpn '-' { int b = pop(); int a = pop(); push(a - b); printf("apply -\n"); }
     | rpn '*' { int b = pop(); int a = pop(); push(a * b); printf("apply *\n"); }
+    | rpn '/' { int b = pop(); int a = pop(); if (b == 0) { fprintf(stderr, "division by zero\n"); push(0); } else { push(a / b); } printf("apply /\n"); }
+    | rpn '^' { int b = pop(); int a = pop(); int r = 1; for (int i = 0; i < b; i++) r *= a; push(r); printf("apply ^\n"); }
     | NUM { push($1); }
     ;
 
@@ -58,6 +60,6 @@ rpn:
 void yyerror(const char *s) { fprintf(stderr, "%s\n", s); }
 
 int main(void) {
-    printf("Postfix calculator — enter integers and + - * (space-separated), end line with Enter.\n");
+    printf("Postfix calculator — enter integers and + - * / ^ (space-separated), end line with Enter.\n");
     return yyparse();
 }

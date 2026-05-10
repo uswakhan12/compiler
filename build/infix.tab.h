@@ -64,7 +64,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 8 "modules/module2_parser/infix.y"
+#line 8 "parser/infix.y"
  int ival; 
 
 #line 71 "build/infix.tab.h"

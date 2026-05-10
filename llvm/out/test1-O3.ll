@@ -1,5 +1,5 @@
-; ModuleID = '/Users/muhammadabdullahwaqar/Documents/Projects/CC /compiler/modules/module8_llvm/test1.c'
-source_filename = "/Users/muhammadabdullahwaqar/Documents/Projects/CC /compiler/modules/module8_llvm/test1.c"
+; ModuleID = '/Users/muhammadabdullahwaqar/Documents/Projects/CC /compiler/llvm/test1.c'
+source_filename = "/Users/muhammadabdullahwaqar/Documents/Projects/CC /compiler/llvm/test1.c"
 target datalayout = "e-m:o-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-n32:64-S128-Fn32"
 target triple = "arm64-apple-macosx26.0.0"
 

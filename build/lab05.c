@@ -495,7 +495,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "modules/module1_lexer/lab05_lexer.l"
+#line 1 "lexer/lab05_lexer.l"
 /*
  * Module 1 — Lab 05 Task 1 baseline lexer.
  *
@@ -517,7 +517,7 @@ char *yytext;
  *         gcc  -o lab05 lab05.c -ll        (macOS)  or  -lfl (Linux)
  * Run:    ./lab05 < some_input.txt
  */
-#line 26 "modules/module1_lexer/lab05_lexer.l"
+#line 26 "lexer/lab05_lexer.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -739,7 +739,7 @@ YY_DECL
 		}
 
 	{
-#line 36 "modules/module1_lexer/lab05_lexer.l"
+#line 36 "lexer/lab05_lexer.l"
 
 
 #line 745 "build/lab05.c"
@@ -812,77 +812,77 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 38 "modules/module1_lexer/lab05_lexer.l"
+#line 38 "lexer/lab05_lexer.l"
 { /* whitespace */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 40 "modules/module1_lexer/lab05_lexer.l"
+#line 40 "lexer/lab05_lexer.l"
 { printf("KEYWORD\tif\n"); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 41 "modules/module1_lexer/lab05_lexer.l"
+#line 41 "lexer/lab05_lexer.l"
 { printf("KEYWORD\tthen\n"); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 42 "modules/module1_lexer/lab05_lexer.l"
+#line 42 "lexer/lab05_lexer.l"
 { printf("KEYWORD\tbegin\n"); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 43 "modules/module1_lexer/lab05_lexer.l"
+#line 43 "lexer/lab05_lexer.l"
 { printf("KEYWORD\tend\n"); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 44 "modules/module1_lexer/lab05_lexer.l"
+#line 44 "lexer/lab05_lexer.l"
 { printf("KEYWORD\tprocedure\n"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 45 "modules/module1_lexer/lab05_lexer.l"
+#line 45 "lexer/lab05_lexer.l"
 { printf("KEYWORD\tfunction\n"); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 47 "modules/module1_lexer/lab05_lexer.l"
+#line 47 "lexer/lab05_lexer.l"
 { printf("FLOAT\t%s\n", yytext); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 48 "modules/module1_lexer/lab05_lexer.l"
+#line 48 "lexer/lab05_lexer.l"
 { printf("INT\t%s\n", yytext); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 49 "modules/module1_lexer/lab05_lexer.l"
+#line 49 "lexer/lab05_lexer.l"
 { printf("IDENT\t%s\n", yytext); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 51 "modules/module1_lexer/lab05_lexer.l"
+#line 51 "lexer/lab05_lexer.l"
 { printf("OP\t+\n"); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 52 "modules/module1_lexer/lab05_lexer.l"
+#line 52 "lexer/lab05_lexer.l"
 { printf("OP\t-\n"); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 53 "modules/module1_lexer/lab05_lexer.l"
+#line 53 "lexer/lab05_lexer.l"
 { printf("OP\t*\n"); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 54 "modules/module1_lexer/lab05_lexer.l"
+#line 54 "lexer/lab05_lexer.l"
 { printf("OP\t/\n"); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 56 "modules/module1_lexer/lab05_lexer.l"
+#line 56 "lexer/lab05_lexer.l"
 {
                             fprintf(stderr, "lexer error: unrecognised character '%s' at line %d\n",
                                     yytext, yylineno);
@@ -890,7 +890,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 61 "modules/module1_lexer/lab05_lexer.l"
+#line 61 "lexer/lab05_lexer.l"
 ECHO;
 	YY_BREAK
 #line 896 "build/lab05.c"
@@ -1910,7 +1910,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 61 "modules/module1_lexer/lab05_lexer.l"
+#line 61 "lexer/lab05_lexer.l"
 
 
 int main(int argc, char **argv) {

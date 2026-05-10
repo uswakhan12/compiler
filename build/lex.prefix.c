@@ -377,12 +377,12 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    4,    5,    1,    6,    1,    1,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    1,    1,    1,
+        1,    4,    5,    1,    6,    1,    7,    8,    8,    8,
+        8,    8,    8,    8,    8,    8,    8,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    9,    1,    1,    1,    1,    1,    1,
 
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -403,15 +403,15 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[8] =
+static const YY_CHAR yy_meta[10] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1
+        1,    1,    1,    1,    1,    1,    1,    1,    1
     } ;
 
 static const flex_int16_t yy_base[12] =
     {   0,
-        0,    0,   12,   13,    9,   13,   13,    3,    7,    1,
-       13
+        0,    0,   14,   15,   11,   15,   15,    4,    9,    2,
+       15
     } ;
 
 static const flex_int16_t yy_def[12] =
@@ -420,16 +420,18 @@ static const flex_int16_t yy_def[12] =
         0
     } ;
 
-static const flex_int16_t yy_nxt[21] =
+static const flex_int16_t yy_nxt[25] =
     {   0,
-        4,    5,    6,    7,    7,    7,    8,   10,    9,   10,
-        9,   11,    3,   11,   11,   11,   11,   11,   11,   11
+        4,    5,    6,    7,    7,    7,    7,    8,    7,   10,
+        9,   10,    9,   11,    3,   11,   11,   11,   11,   11,
+       11,   11,   11,   11
     } ;
 
-static const flex_int16_t yy_chk[21] =
+static const flex_int16_t yy_chk[25] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,   10,    9,    8,
-        5,    3,   11,   11,   11,   11,   11,   11,   11,   11
+        1,    1,    1,    1,    1,    1,    1,    1,    1,   10,
+        9,    8,    5,    3,   11,   11,   11,   11,   11,   11,
+       11,   11,   11,   11
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -446,12 +448,12 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "modules/module2_parser/prefix.l"
-#line 4 "modules/module2_parser/prefix.l"
+#line 1 "parser/prefix.l"
+#line 4 "parser/prefix.l"
 #include <stdlib.h>
 #include "prefix.tab.h"
-#line 453 "build/lex.prefix.c"
-#line 454 "build/lex.prefix.c"
+#line 455 "build/lex.prefix.c"
+#line 456 "build/lex.prefix.c"
 
 #define INITIAL 0
 
@@ -668,10 +670,10 @@ YY_DECL
 		}
 
 	{
-#line 8 "modules/module2_parser/prefix.l"
+#line 8 "parser/prefix.l"
 
 
-#line 674 "build/lex.prefix.c"
+#line 676 "build/lex.prefix.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -704,7 +706,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 13 );
+		while ( yy_base[yy_current_state] != 15 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -730,36 +732,36 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "modules/module2_parser/prefix.l"
+#line 10 "parser/prefix.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "modules/module2_parser/prefix.l"
+#line 11 "parser/prefix.l"
 { yylval.ival = atoi(yytext); return NUM; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 12 "modules/module2_parser/prefix.l"
+#line 12 "parser/prefix.l"
 { return yytext[0]; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 13 "modules/module2_parser/prefix.l"
+#line 13 "parser/prefix.l"
 { return ENDL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 14 "modules/module2_parser/prefix.l"
+#line 14 "parser/prefix.l"
 { fprintf(stderr, "bad token %s\n", yytext); return 0; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "modules/module2_parser/prefix.l"
+#line 16 "parser/prefix.l"
 ECHO;
 	YY_BREAK
-#line 762 "build/lex.prefix.c"
+#line 764 "build/lex.prefix.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1764,6 +1766,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 16 "modules/module2_parser/prefix.l"
+#line 16 "parser/prefix.l"
 
 

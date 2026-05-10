@@ -73,10 +73,10 @@ echo "--- Fixed grammar (./ll1) ---"
 ./ll1
 echo ""
 echo "--- Generic grammar from file (./ll1_generic grammars/expr.txt) ---"
-./ll1_generic modules/module4_first_follow/grammars/expr.txt
+./ll1_generic first_follow/grammars/expr.txt
 echo ""
 echo "--- Generic grammar (statements) (./ll1_generic grammars/stmt.txt) ---"
-./ll1_generic modules/module4_first_follow/grammars/stmt.txt | head -40
+./ll1_generic first_follow/grammars/stmt.txt | head -40
 
 # ============================================================== #
 echo ""
@@ -134,24 +134,24 @@ fi
 echo ""
 echo "================ Module 8 — LLVM IR generation ================"
 echo "--- minicc TAC → LLVM IR backend (./minicc --emit-llvm) ---"
-mkdir -p modules/module8_llvm/out
+mkdir -p llvm/out
 while read -r f; do
     name=$(basename "$f" .mini)
-    out=modules/module8_llvm/out/${name}.ll
+    out=llvm/out/${name}.ll
     ./minicc --emit-llvm="$out" "$f" >/dev/null 2>&1 || true
     echo "[$f] → $out  ($(wc -l <"$out" 2>/dev/null | tr -d ' ') lines)"
 done <"$TMP"
 echo "Head of one generated .ll file:"
-head -25 modules/module8_llvm/out/$(basename "$FIRST" .mini).ll
+head -25 llvm/out/$(basename "$FIRST" .mini).ll
 
 if command -v clang >/dev/null 2>&1; then
     echo ""
     echo "--- Clang reference: O0 vs O3 on bundled test1.c / test2.c ---"
     clang --version | head -1
-    chmod +x modules/module8_llvm/generate_ir.sh 2>/dev/null || true
-    ./modules/module8_llvm/generate_ir.sh || true
+    chmod +x llvm/generate_ir.sh 2>/dev/null || true
+    ./llvm/generate_ir.sh || true
     echo "Generated .ll files:"
-    ls -1 modules/module8_llvm/out/*.ll
+    ls -1 llvm/out/*.ll
 else
     echo "clang not found — install clang for the full Module 8 demo."
 fi

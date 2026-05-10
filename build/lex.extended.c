@@ -458,8 +458,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "modules/module3_extended/extended.l"
-#line 4 "modules/module3_extended/extended.l"
+#line 1 "parser/extended.l"
+#line 4 "parser/extended.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -682,7 +682,7 @@ YY_DECL
 		}
 
 	{
-#line 10 "modules/module3_extended/extended.l"
+#line 10 "parser/extended.l"
 
 
 #line 688 "build/lex.extended.c"
@@ -744,88 +744,88 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "modules/module3_extended/extended.l"
+#line 12 "parser/extended.l"
 
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 13 "modules/module3_extended/extended.l"
+#line 13 "parser/extended.l"
 { return '\n'; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 15 "modules/module3_extended/extended.l"
+#line 15 "parser/extended.l"
 { yylval.val = strtod(yytext, NULL); return NUM; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 16 "modules/module3_extended/extended.l"
+#line 16 "parser/extended.l"
 { yylval.val = strtod(yytext, NULL); return NUM; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 18 "modules/module3_extended/extended.l"
+#line 18 "parser/extended.l"
 { return LOG; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 19 "modules/module3_extended/extended.l"
+#line 19 "parser/extended.l"
 { return EXP; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "modules/module3_extended/extended.l"
+#line 21 "parser/extended.l"
 { yylval.id = strdup(yytext); return ID; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "modules/module3_extended/extended.l"
+#line 22 "parser/extended.l"
 { return '='; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 24 "modules/module3_extended/extended.l"
+#line 24 "parser/extended.l"
 { return '('; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 25 "modules/module3_extended/extended.l"
+#line 25 "parser/extended.l"
 { return ')'; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 26 "modules/module3_extended/extended.l"
+#line 26 "parser/extended.l"
 { return '+'; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 27 "modules/module3_extended/extended.l"
+#line 27 "parser/extended.l"
 { return '-'; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 28 "modules/module3_extended/extended.l"
+#line 28 "parser/extended.l"
 { return '*'; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 29 "modules/module3_extended/extended.l"
+#line 29 "parser/extended.l"
 { return '/'; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 30 "modules/module3_extended/extended.l"
+#line 30 "parser/extended.l"
 { return '^'; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 32 "modules/module3_extended/extended.l"
+#line 32 "parser/extended.l"
 { fprintf(stderr, "illegal char %s\n", yytext); return 0; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 34 "modules/module3_extended/extended.l"
+#line 34 "parser/extended.l"
 ECHO;
 	YY_BREAK
 #line 831 "build/lex.extended.c"
@@ -1833,6 +1833,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 34 "modules/module3_extended/extended.l"
+#line 34 "parser/extended.l"
 
 

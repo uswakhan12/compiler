@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 17 "modules/module2_parser/parse_tree.y"
+#line 17 "parser/parse_tree.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1159,7 +1159,7 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: E ENDL  */
-#line 123 "modules/module2_parser/parse_tree.y"
+#line 123 "parser/parse_tree.y"
            {
         printf("\n=== PARSE TREE (verbose) ===\n");
         print_parse_tree((yyvsp[-1].node), 0);
@@ -1175,49 +1175,49 @@ yyreduce:
     break;
 
   case 6: /* E: E '+' T  */
-#line 138 "modules/module2_parser/parse_tree.y"
+#line 138 "parser/parse_tree.y"
             { Node *n = mknode("+"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
 #line 1181 "build/parse_tree.tab.c"
     break;
 
   case 7: /* E: E '-' T  */
-#line 139 "modules/module2_parser/parse_tree.y"
+#line 139 "parser/parse_tree.y"
             { Node *n = mknode("-"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
 #line 1187 "build/parse_tree.tab.c"
     break;
 
   case 8: /* E: T  */
-#line 140 "modules/module2_parser/parse_tree.y"
+#line 140 "parser/parse_tree.y"
             { Node *n = mknode("E"); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
 #line 1193 "build/parse_tree.tab.c"
     break;
 
   case 9: /* T: T '*' F  */
-#line 144 "modules/module2_parser/parse_tree.y"
+#line 144 "parser/parse_tree.y"
             { Node *n = mknode("*"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
 #line 1199 "build/parse_tree.tab.c"
     break;
 
   case 10: /* T: T '/' F  */
-#line 145 "modules/module2_parser/parse_tree.y"
+#line 145 "parser/parse_tree.y"
             { Node *n = mknode("/"); add_kid(n,(yyvsp[-2].node)); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
 #line 1205 "build/parse_tree.tab.c"
     break;
 
   case 11: /* T: F  */
-#line 146 "modules/module2_parser/parse_tree.y"
+#line 146 "parser/parse_tree.y"
             { Node *n = mknode("T"); add_kid(n,(yyvsp[0].node)); (yyval.node) = n; }
 #line 1211 "build/parse_tree.tab.c"
     break;
 
   case 12: /* F: '(' E ')'  */
-#line 150 "modules/module2_parser/parse_tree.y"
+#line 150 "parser/parse_tree.y"
               { Node *n = mknode("F"); add_kid(n,(yyvsp[-1].node)); (yyval.node) = n; }
 #line 1217 "build/parse_tree.tab.c"
     break;
 
   case 13: /* F: NUM  */
-#line 151 "modules/module2_parser/parse_tree.y"
+#line 151 "parser/parse_tree.y"
               { Node *n = mknode("F"); add_kid(n, mknum((yyvsp[0].ival))); (yyval.node) = n; }
 #line 1223 "build/parse_tree.tab.c"
     break;
@@ -1416,7 +1416,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 154 "modules/module2_parser/parse_tree.y"
+#line 154 "parser/parse_tree.y"
 
 
 void yyerror(const char *s) { fprintf(stderr, "parse error: %s\n", s); }
