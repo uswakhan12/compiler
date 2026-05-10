@@ -34,7 +34,20 @@ typedef struct VarTy {
     struct VarTy *next;
 } VarTy;
 
+/* Forward declarations — the temp-type inference pass below needs to
+   call the literal helpers which are defined further down. */
+static int is_number_literal(const char *s);
+static int is_float_literal(const char *s);
+
 static VarTy *g_vars;
+static VarTy *g_temps;        /* Inferred types for tN temps */
+static int g_decl_log = 0;    /* Whether we emit `declare double @log(double)` */
+static int g_decl_exp = 0;
+static int g_has_return = 0;  /* Whether the program has an explicit return */
+/* A 1-deep queue is enough because our codegen emits `param a; call ...`
+   adjacently and our log/exp lowering always has exactly one parameter. */
+static char *g_pending_param = NULL;
+static int   g_pending_param_isfloat = 0;
 
 static void collect_var_types(AstNode *n) {
     if (!n)
@@ -91,6 +104,92 @@ static VarTy *lookup_var(const char *name) {
     return NULL;
 }
 
+static int temp_is_float(const char *t) {
+    if (!t)
+        return 0;
+    for (VarTy *v = g_temps; v; v = v->next)
+        if (strcmp(v->name, t) == 0)
+            return v->is_float;
+    return 0;
+}
+
+static void set_temp_float(const char *t, int isf) {
+    for (VarTy *v = g_temps; v; v = v->next)
+        if (strcmp(v->name, t) == 0) {
+            if (isf)
+                v->is_float = 1;
+            return;
+        }
+    VarTy *v = (VarTy *)calloc(1, sizeof(VarTy));
+    v->name = strdup(t);
+    v->is_float = isf;
+    v->next = g_temps;
+    g_temps = v;
+}
+
+/* Pre-pass: infer i32-vs-double for every temp, with fixed-point
+   iteration because a temp's type may depend on another temp's type. */
+static void infer_temp_types(TacProgram *tac) {
+    /* First insert every temp with is_float=0 (default). */
+    for (TacInst *in = tac->head; in; in = in->next) {
+        if (in->result && in->result[0] == 't')
+            set_temp_float(in->result, 0);
+    }
+    /* Helper: operand is float if it's a float literal, a float source
+       variable, or a temp already inferred as float. */
+#define OP_FLOAT(o) ((o) ? (is_number_literal(o) ? is_float_literal(o)               \
+                                              : (lookup_is_float(o) || temp_is_float(o)))  \
+                       : 0)
+    int changed = 1;
+    while (changed) {
+        changed = 0;
+        for (TacInst *in = tac->head; in; in = in->next) {
+            if (!in->result || in->result[0] != 't')
+                continue;
+            int isf = 0;
+            switch (in->op) {
+            case TAC_OP_CALL:
+                /* `t = call log/exp, ...` produces double. */
+                if (in->arg1 && (strcmp(in->arg1, "log") == 0 || strcmp(in->arg1, "exp") == 0))
+                    isf = 1;
+                break;
+            case TAC_OP_LOG:
+            case TAC_OP_EXP:
+            case TAC_OP_CAST_INT_TO_FLOAT:
+                isf = 1;
+                break;
+            case TAC_OP_ARR_LOAD: {
+                VarTy *arr = lookup_var(in->arg1);
+                isf = arr ? arr->is_float : 0;
+                break;
+            }
+            case TAC_OP_ADD:
+            case TAC_OP_SUB:
+            case TAC_OP_MUL:
+            case TAC_OP_DIV:
+            case TAC_OP_POW:
+                isf = OP_FLOAT(in->arg1) || OP_FLOAT(in->arg2);
+                break;
+            case TAC_OP_NEG:
+                isf = OP_FLOAT(in->arg1);
+                break;
+            case TAC_OP_COPY:
+            case TAC_OP_ASSIGN:
+                isf = OP_FLOAT(in->arg1);
+                break;
+            default:
+                break;
+            }
+            if (isf && !temp_is_float(in->result)) {
+                set_temp_float(in->result, 1);
+                changed = 1;
+            }
+        }
+    }
+#undef OP_FLOAT
+}
+
+/* Defined here (forward-declared above for the temp-typing pass). */
 static int is_number_literal(const char *s) {
     if (!s || !*s)
         return 0;
@@ -114,11 +213,26 @@ static int operand_is_float(const char *o) {
         return 0;
     if (is_number_literal(o))
         return is_float_literal(o);
-    return lookup_is_float(o);
+    if (lookup_is_float(o))
+        return 1;
+    return temp_is_float(o);
 }
 
 static const char *llvm_type_of(const char *name) {
     return operand_is_float(name) ? "double" : "i32";
+}
+
+static void scan_for_decls(TacProgram *tac) {
+    for (TacInst *in = tac->head; in; in = in->next) {
+        if (in->op == TAC_OP_CALL && in->arg1) {
+            if (strcmp(in->arg1, "log") == 0)
+                g_decl_log = 1;
+            else if (strcmp(in->arg1, "exp") == 0)
+                g_decl_exp = 1;
+        }
+        if (in->op == TAC_OP_RETURN)
+            g_has_return = 1;
+    }
 }
 
 static void emit_prelude(FILE *out) {
@@ -126,8 +240,12 @@ static void emit_prelude(FILE *out) {
     fprintf(out, "target triple = \"x86_64-pc-linux-gnu\"\n\n");
     fprintf(out, "@.fmt_int = private constant [4 x i8] c\"%%d\\0A\\00\"\n");
     fprintf(out, "@.fmt_flt = private constant [4 x i8] c\"%%f\\0A\\00\"\n");
-    fprintf(out, "declare i32 @printf(i8*, ...)\n\n");
-    fprintf(out, "define i32 @main() {\n");
+    fprintf(out, "declare i32 @printf(i8*, ...)\n");
+    if (g_decl_log)
+        fprintf(out, "declare double @log(double)\n");
+    if (g_decl_exp)
+        fprintf(out, "declare double @exp(double)\n");
+    fprintf(out, "\ndefine i32 @main() {\n");
     fprintf(out, "entry:\n");
 }
 
@@ -363,8 +481,14 @@ static void emit_arr_store(FILE *out, TacInst *in) {
 
 void emit_llvm_ir(FILE *out, AstNode *program, TacProgram *tac) {
     g_vars = NULL;
+    g_temps = NULL;
     g_ssa_counter = 0;
+    g_decl_log = g_decl_exp = g_has_return = 0;
+    g_pending_param = NULL;
+    g_pending_param_isfloat = 0;
     collect_var_types(program);
+    scan_for_decls(tac);
+    infer_temp_types(tac);
     emit_prelude(out);
     emit_alloca_for_locals(out, tac);
 
@@ -409,19 +533,87 @@ void emit_llvm_ir(FILE *out, AstNode *program, TacProgram *tac) {
         case TAC_OP_ARR_STORE:
             emit_arr_store(out, in);
             break;
+        case TAC_OP_PARAM: {
+            /* Queue the parameter; load now so the value is fresh. */
+            int is_f = operand_is_float(in->arg1);
+            char *v = emit_load(out, in->arg1, is_f);
+            free(g_pending_param);
+            g_pending_param = v;
+            g_pending_param_isfloat = is_f;
+            break;
+        }
+        case TAC_OP_CALL: {
+            /* `result = call <fname>, <argc>` — we currently support the
+               math built-ins log and exp (1 arg, double). */
+            const char *fname = in->arg1 ? in->arg1 : "?";
+            int is_math = (strcmp(fname, "log") == 0 || strcmp(fname, "exp") == 0);
+            if (is_math) {
+                /* Promote the queued param to double if needed. */
+                char *arg = g_pending_param ? strdup(g_pending_param) : strdup("0.000000e+00");
+                if (g_pending_param && !g_pending_param_isfloat) {
+                    char *s = fresh_ssa("argd");
+                    fprintf(out, "  %s = sitofp i32 %s to double\n", s, arg);
+                    free(arg);
+                    arg = s;
+                }
+                char *r = fresh_ssa("ret");
+                fprintf(out, "  %s = call double @%s(double %s)\n", r, fname, arg);
+                if (in->result)
+                    emit_store(out, in->result, r, 1);
+                free(arg);
+                free(r);
+            } else {
+                fprintf(out, "  ; (unsupported call to %s)\n", fname);
+            }
+            free(g_pending_param);
+            g_pending_param = NULL;
+            g_pending_param_isfloat = 0;
+            break;
+        }
+        case TAC_OP_RETURN: {
+            /* `return x` — the runtime ABI for our `main()` is `i32`,
+               so coerce double → i32 when necessary. */
+            int is_f = operand_is_float(in->arg1);
+            char *v = emit_load(out, in->arg1, is_f);
+            if (is_f) {
+                char *s = fresh_ssa("rcast");
+                fprintf(out, "  %s = fptosi double %s to i32\n", s, v);
+                free(v);
+                v = s;
+            }
+            fprintf(out, "  ret i32 %s\n", v);
+            /* Place a fresh anchor block so any following code stays
+               well-formed LLVM (every block must have one terminator). */
+            fprintf(out, "post.%d:\n", g_ssa_counter++);
+            free(v);
+            break;
+        }
         default:
             fprintf(out, "  ; (skipping unsupported TAC op: id=%d)\n", in->id);
             break;
         }
     }
 
-    fprintf(out, "  ret i32 0\n");
+    /* If the program had no explicit `return`, terminate `main` with
+       `ret i32 0`. Otherwise the explicit return already terminated. */
+    if (!g_has_return)
+        fprintf(out, "  ret i32 0\n");
+    else
+        fprintf(out, "  ret i32 0     ; fallback terminator\n");
     fprintf(out, "}\n");
 
+    free(g_pending_param);
+    g_pending_param = NULL;
     while (g_vars) {
         VarTy *nx = g_vars->next;
         free(g_vars->name);
         free(g_vars);
         g_vars = nx;
+    }
+    while (g_temps) {
+        VarTy *nx = g_temps->next;
+        free(g_temps->name);
+        free(g_temps);
+        g_temps = nx;
     }
 }

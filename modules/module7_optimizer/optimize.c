@@ -63,7 +63,8 @@ static void pass_dead_code_elimination(TacProgram *p) {
         if (in->result[0] != 't')
             continue;
         /* Skip ops that have side effects beyond their result. */
-        if (in->op == TAC_OP_CALL || in->op == TAC_OP_ARR_STORE)
+        if (in->op == TAC_OP_CALL || in->op == TAC_OP_PARAM ||
+            in->op == TAC_OP_RETURN || in->op == TAC_OP_ARR_STORE)
             continue;
         int refs = 0;
         for (TacInst *q = p->head; q; q = q->next) {

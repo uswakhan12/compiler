@@ -96,12 +96,16 @@ static char *gen_expr(TacProgram *p, AstNode *e) {
         return t;
     }
     case AST_CALL: {
+        /* Lower built-in math calls to the canonical TAC function-call
+           forms required by the spec:
+                param x
+                t = call <fname>, 1
+           This exercises TAC_OP_PARAM / TAC_OP_CALL even though our
+           source language has no user-defined functions. */
         char *a = gen_expr(p, e->u.call.arg);
         char *t = tac_new_temp(p);
-        if (e->u.call.is_log)
-            tac_emit(p, TAC_OP_LOG, t, a, NULL);
-        else
-            tac_emit(p, TAC_OP_EXP, t, a, NULL);
+        tac_emit(p, TAC_OP_PARAM, NULL, a, NULL);
+        tac_emit(p, TAC_OP_CALL, t, e->u.call.is_log ? "log" : "exp", "1");
         free(a);
         return t;
     }
@@ -218,11 +222,10 @@ static void gen_stmt(TacProgram *p, AstNode *s) {
         break;
     }
     case AST_RETURN: {
+        /* Emit the canonical `return x` TAC form (spec §7.1). */
         char *t = gen_expr(p, s->u.ret.expr);
-        if (t) {
-            tac_emit(p, TAC_OP_COPY, "_ret", t, NULL);
-            free(t);
-        }
+        tac_emit(p, TAC_OP_RETURN, NULL, t ? t : "0", NULL);
+        free(t);
         break;
     }
     default:

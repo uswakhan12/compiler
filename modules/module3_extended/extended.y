@@ -12,6 +12,35 @@ void yyerror(const char *s);
    variable YYDEBUG=0 to silence. */
 #define YYDEBUG 1
 extern int yydebug;
+
+/* Tiny linear variable table so the extended grammar can support
+   the `id` rule (spec §4.1: B → ( E ) | id | num | log(E) | exp(E)).
+   `x = 2*3 + 1` binds x; using `x` in a later expression evaluates
+   to that bound value.  Unknown ids print a warning and evaluate to 0. */
+typedef struct VarBind {
+    char *name;
+    double value;
+    struct VarBind *next;
+} VarBind;
+static VarBind *g_vars = NULL;
+
+static double var_lookup(const char *name) {
+    for (VarBind *v = g_vars; v; v = v->next)
+        if (strcmp(v->name, name) == 0)
+            return v->value;
+    fprintf(stderr, "warning: undefined identifier '%s' — using 0\n", name);
+    return 0.0;
+}
+
+static void var_set(const char *name, double v) {
+    for (VarBind *p = g_vars; p; p = p->next)
+        if (strcmp(p->name, name) == 0) { p->value = v; return; }
+    VarBind *b = (VarBind *)malloc(sizeof(VarBind));
+    b->name = strdup(name);
+    b->value = v;
+    b->next = g_vars;
+    g_vars = b;
+}
 %}
 
 %union {
@@ -20,6 +49,7 @@ extern int yydebug;
 }
 
 %token <val> NUM
+%token <id>  ID
 %token LOG EXP
 
 %left '+' '-'
@@ -35,9 +65,10 @@ input:
     ;
 
 line:
-    expr '\n' { printf("= %.6g\n", $1); }
+    expr '\n'         { printf("= %.6g\n", $1); }
+    | ID '=' expr '\n' { var_set($1, $3); printf("%s := %.6g\n", $1, $3); free($1); }
     | '\n'
-    | error '\n' { yyerrok; }
+    | error '\n'      { yyerrok; }
     ;
 
 expr:
@@ -50,6 +81,7 @@ expr:
     | LOG '(' expr ')' { $$ = log($3); }
     | EXP '(' expr ')' { $$ = exp($3); }
     | NUM { $$ = $1; }
+    | ID  { $$ = var_lookup($1); free($1); }
     ;
 
 %%

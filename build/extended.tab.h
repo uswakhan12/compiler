@@ -55,8 +55,9 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     NUM = 258,                     /* NUM  */
-    LOG = 259,                     /* LOG  */
-    EXP = 260                      /* EXP  */
+    ID = 259,                      /* ID  */
+    LOG = 260,                     /* LOG  */
+    EXP = 261                      /* EXP  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -65,12 +66,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "modules/module3_extended/extended.y"
+#line 46 "modules/module3_extended/extended.y"
 
     double val;
     char *id;
 
-#line 74 "build/extended.tab.h"
+#line 75 "build/extended.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
