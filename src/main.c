@@ -8,6 +8,7 @@
 #include "optimize.h"
 #include "tac.h"
 #include "token_dump.h"
+#include "llvm_emit.h"
 
 extern FILE *yyin;
 extern int yyparse(void);
