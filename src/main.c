@@ -17,13 +17,15 @@ extern AstNode *g_parse_result;
 static void usage(const char *argv0) {
     fprintf(stderr,
             "Usage: %s [options] [file.mini]\n"
-            "  -h            help\n"
-            "  --pipeline    ONE input file → tokens + parse + semantics + TAC + passes\n"
-            "                 (full compiler story in one run; requires a file)\n"
-            "  --tokens      lexer only (token names)\n"
-            "  --tac         three-address code only (default)\n"
-            "  --opt         full optimisation passes after TAC\n"
-            "  --check       semantic check only (no IR)\n",
+            "  -h               help\n"
+            "  --pipeline       ONE input file → tokens + parse + semantics + TAC + passes\n"
+            "                    (full compiler story in one run; requires a file)\n"
+            "  --tokens         lexer only (token names)\n"
+            "  --tac            three-address code only (default)\n"
+            "  --opt            full optimisation passes after TAC\n"
+            "  --check          semantic check only (no IR)\n"
+            "  --emit-llvm[=F]  emit LLVM IR from the optimised TAC (Module 8 backend)\n"
+            "                    Writes to F if given, otherwise to stdout.\n",
             argv0);
 }
 
@@ -32,7 +34,9 @@ int main(int argc, char **argv) {
     int check_only = 0;
     int tokens_only = 0;
     int pipeline = 0;
+    int emit_llvm = 0;
     const char *path = NULL;
+    const char *llvm_out_path = NULL;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
@@ -53,6 +57,18 @@ int main(int argc, char **argv) {
         }
         if (strcmp(argv[i], "--check") == 0) {
             check_only = 1;
+            continue;
+        }
+        if (strncmp(argv[i], "--emit-llvm", 11) == 0) {
+            emit_llvm = 1;
+            opt_opt = 1;
+            if (argv[i][11] == '=' && argv[i][12])
+                llvm_out_path = &argv[i][12];
+            else if (argv[i][11] == '\0' && i + 1 < argc && argv[i + 1][0] != '-' &&
+                     !strstr(argv[i + 1], ".mini")) {
+                llvm_out_path = argv[i + 1];
+                i++;
+            }
             continue;
         }
         if (strcmp(argv[i], "--tac") == 0)
@@ -156,11 +172,31 @@ int main(int argc, char **argv) {
         optimize_tac(t);
         printf("\n=== Final TAC ===\n");
         tac_print(t);
-        tac_free_program(t);
-    } else {
-        tac_free_program(t);
     }
 
+    if (emit_llvm) {
+        FILE *llo = stdout;
+        if (llvm_out_path) {
+            llo = fopen(llvm_out_path, "w");
+            if (!llo) {
+                perror(llvm_out_path);
+                tac_free_program(t);
+                ast_free(g_parse_result);
+                return 1;
+            }
+        }
+        if (pipeline)
+            printf("\n========== Phase 8 — LLVM IR emission ==========\n");
+        else if (!llvm_out_path)
+            printf("\n=== Module 8 — LLVM IR (from minicc TAC backend) ===\n");
+        emit_llvm_ir(llo, g_parse_result, t);
+        if (llvm_out_path) {
+            fclose(llo);
+            fprintf(stderr, "LLVM IR written to %s\n", llvm_out_path);
+        }
+    }
+
+    tac_free_program(t);
     ast_free(g_parse_result);
     return 0;
 }
