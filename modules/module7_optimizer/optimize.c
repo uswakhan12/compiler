@@ -120,6 +120,11 @@ static void pass_unreachable(TacProgram *p) {
 }
 
 static void pass_constant_propagation(TacProgram *p) {
+    /* Intra-basic-block constant propagation only: stop at labels, jumps,
+       and any subsequent re-definition of the temp.  Crossing a label is
+       unsound because a value at the label may be reached from multiple
+       definitions on different control-flow paths (e.g. the two
+       branches of an `if`). */
     for (TacInst *in = p->head; in; in = in->next) {
         if (in->op != TAC_OP_COPY || !in->result || in->result[0] != 't')
             continue;
@@ -127,6 +132,8 @@ static void pass_constant_propagation(TacProgram *p) {
             continue;
         const char *val = in->arg1;
         for (TacInst *q = in->next; q; q = q->next) {
+            if (q->op == TAC_OP_LABEL || q->op == TAC_OP_GOTO)
+                break;
             if (q->arg1 && strcmp(q->arg1, in->result) == 0 && is_num(val)) {
                 free(q->arg1);
                 q->arg1 = strdup(val);
