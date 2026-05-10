@@ -51,6 +51,10 @@ static void pass_constant_folding(TacProgram *p) {
 }
 
 static void pass_dead_code_elimination(TacProgram *p) {
+    /* Conservative DCE: a temp def is dead only if NO instruction
+       anywhere in the program reads it. A flow-sensitive analysis
+       would catch more cases but requires reaching-definitions; this
+       version is sound under arbitrary control flow. */
     for (TacInst *in = p->head; in; in = in->next) {
         if (!in->result)
             continue;
@@ -58,23 +62,21 @@ static void pass_dead_code_elimination(TacProgram *p) {
             continue;
         if (in->result[0] != 't')
             continue;
+        /* Skip ops that have side effects beyond their result. */
+        if (in->op == TAC_OP_CALL || in->op == TAC_OP_ARR_STORE)
+            continue;
         int refs = 0;
-        int seen_def = 0;
         for (TacInst *q = p->head; q; q = q->next) {
-            if (q == in) {
-                seen_def = 1;
-                continue;
-            }
-            if (!seen_def)
+            if (q == in)
                 continue;
             if (q->arg1 && strcmp(q->arg1, in->result) == 0)
                 refs++;
             if (q->arg2 && strcmp(q->arg2, in->result) == 0)
                 refs++;
-            if (q->result && strcmp(q->result, in->result) == 0 && q != in)
-                break;
         }
-        if (refs == 0 && in->op != TAC_OP_IF_EQ && in->op != TAC_OP_IF_NE && in->op != TAC_OP_GOTO)
+        if (refs == 0 && in->op != TAC_OP_IF_EQ && in->op != TAC_OP_IF_NE &&
+            in->op != TAC_OP_IF_LT && in->op != TAC_OP_IF_GT && in->op != TAC_OP_IF_LE &&
+            in->op != TAC_OP_IF_GE && in->op != TAC_OP_GOTO)
             in->dead = true;
     }
 }
@@ -149,13 +151,21 @@ static void pass_constant_propagation(TacProgram *p) {
 }
 
 static void pass_cse(TacProgram *p) {
-    /* Reuse identical binary ops on same operands */
+    /* Reuse identical binary ops on same operands within the same basic
+       block. We only consider candidate matches that lie between the
+       most recent label-or-program-start and the current instruction,
+       which is sound without a full data-flow analysis. */
     for (TacInst *in = p->head; in; in = in->next) {
         if (in->op != TAC_OP_ADD && in->op != TAC_OP_MUL)
             continue;
         if (!in->arg1 || !in->arg2 || !in->result)
             continue;
-        for (TacInst *q = p->head; q && q != in; q = q->next) {
+        /* Find the start of the basic block containing `in`. */
+        TacInst *bb_start = p->head;
+        for (TacInst *q = p->head; q && q != in; q = q->next)
+            if (q->op == TAC_OP_LABEL)
+                bb_start = q;
+        for (TacInst *q = bb_start; q && q != in; q = q->next) {
             if (q->op != in->op)
                 continue;
             if (!q->result || q->result[0] != 't')

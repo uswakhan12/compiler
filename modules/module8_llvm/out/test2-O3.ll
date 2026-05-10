@@ -1,7 +1,7 @@
-; ModuleID = '/Users/uswa/Desktop/6th Semester/CC/labs/compiler/llvm/test2.c'
-source_filename = "/Users/uswa/Desktop/6th Semester/CC/labs/compiler/llvm/test2.c"
+; ModuleID = '/Users/muhammadabdullahwaqar/Documents/Projects/CC /compiler/modules/module8_llvm/test2.c'
+source_filename = "/Users/muhammadabdullahwaqar/Documents/Projects/CC /compiler/modules/module8_llvm/test2.c"
 target datalayout = "e-m:o-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-n32:64-S128-Fn32"
-target triple = "arm64-apple-macosx14.0.0"
+target triple = "arm64-apple-macosx26.0.0"
 
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 
@@ -21,7 +21,7 @@ attributes #1 = { nofree nounwind "frame-pointer"="non-leaf-no-reserve" "no-trap
 !llvm.ident = !{!5}
 !llvm.errno.tbaa = !{!6}
 
-!0 = !{i32 2, !"SDK Version", [2 x i32] [i32 14, i32 5]}
+!0 = !{i32 2, !"SDK Version", [2 x i32] [i32 26, i32 2]}
 !1 = !{i32 1, !"wchar_size", i32 4}
 !2 = !{i32 8, !"PIC Level", i32 2}
 !3 = !{i32 7, !"uwtable", i32 1}

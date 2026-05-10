@@ -7,15 +7,21 @@ declare i32 @printf(i8*, ...)
 
 define i32 @main() {
 entry:
+  %s = alloca i32
+  store i32 0, i32* %s
   %i = alloca i32
   store i32 0, i32* %i
   %t0 = alloca i32
   %t1 = alloca i32
+  %t2 = alloca i32
+  %t3 = alloca i32
+  %t4 = alloca i32
+  %t5 = alloca i32
   store i32 0, i32* %i
   br label %L0
 L0:
   %ld.0 = load i32, i32* %i
-  %c.1 = icmp slt i32 %ld.0, 3
+  %c.1 = icmp slt i32 %ld.0, 5
   br i1 %c.1, label %L2, label %cont.2
 cont.2:
   store i32 0, i32* %t0
@@ -33,11 +39,22 @@ cont.6:
   %ld.7 = load i32, i32* %i
   %v.8 = add i32 %ld.7, 1
   store i32 %v.8, i32* %t1
+  ; (skipping unsupported TAC op: id=10)
   %ld.9 = load i32, i32* %t1
-  store i32 %ld.9, i32* %i
+  store i32 %ld.9, i32* %t2
+  %ld.10 = load i32, i32* %t2
+  store i32 %ld.10, i32* %i
   br label %L0
-post.10:
+post.11:
   br label %L1
 L1:
+  ; (skipping unsupported TAC op: id=15)
+  ; (skipping unsupported TAC op: id=16)
+  %ld.12 = load i32, i32* %t3
+  %ld.13 = load i32, i32* %t4
+  %v.14 = add i32 %ld.12, %ld.13
+  store i32 %v.14, i32* %t5
+  %ld.15 = load i32, i32* %t5
+  store i32 %ld.15, i32* %s
   ret i32 0
 }

@@ -7,15 +7,13 @@ declare i32 @printf(i8*, ...)
 
 define i32 @main() {
 entry:
-  %i = alloca i32
-  store i32 0, i32* %i
+  %x = alloca i32
+  store i32 0, i32* %x
   %t0 = alloca i32
   %t1 = alloca i32
-  store i32 0, i32* %i
-  br label %L0
-L0:
-  %ld.0 = load i32, i32* %i
-  %c.1 = icmp slt i32 %ld.0, 3
+  store i32 3, i32* %x
+  %ld.0 = load i32, i32* %x
+  %c.1 = icmp sgt i32 %ld.0, 2
   br i1 %c.1, label %L2, label %cont.2
 cont.2:
   store i32 0, i32* %t0
@@ -28,15 +26,18 @@ L2:
 L3:
   %ld.4 = load i32, i32* %t0
   %c.5 = icmp eq i32 %ld.4, 0
-  br i1 %c.5, label %L1, label %cont.6
+  br i1 %c.5, label %L0, label %cont.6
 cont.6:
-  %ld.7 = load i32, i32* %i
-  %v.8 = add i32 %ld.7, 1
+  %ld.7 = load i32, i32* %x
+  %v.8 = add i32 %ld.7, 10
   store i32 %v.8, i32* %t1
   %ld.9 = load i32, i32* %t1
-  store i32 %ld.9, i32* %i
-  br label %L0
+  store i32 %ld.9, i32* %x
+  br label %L1
 post.10:
+  br label %L0
+L0:
+  store i32 0, i32* %x
   br label %L1
 L1:
   ret i32 0

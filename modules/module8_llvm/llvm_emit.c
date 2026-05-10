@@ -29,7 +29,8 @@
 
 typedef struct VarTy {
     char *name;
-    int is_float; /* 0 = i32, 1 = double */
+    int is_float;     /* 0 = i32, 1 = double */
+    int array_size;   /* 0 = scalar, >0 = array length */
     struct VarTy *next;
 } VarTy;
 
@@ -42,6 +43,16 @@ static void collect_var_types(AstNode *n) {
         VarTy *v = (VarTy *)calloc(1, sizeof(VarTy));
         v->name = strdup(n->u.decl.name);
         v->is_float = (n->u.decl.decl_type == TYPE_FLOAT);
+        v->array_size = 0;
+        v->next = g_vars;
+        g_vars = v;
+        return;
+    }
+    if (n->kind == AST_ARR_DECL) {
+        VarTy *v = (VarTy *)calloc(1, sizeof(VarTy));
+        v->name = strdup(n->u.arr_decl.name);
+        v->is_float = (n->u.arr_decl.elem_type == TYPE_FLOAT);
+        v->array_size = (int)n->u.arr_decl.size;
         v->next = g_vars;
         g_vars = v;
         return;
