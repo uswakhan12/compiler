@@ -24,8 +24,9 @@ static void usage(const char *argv0) {
             "  --tac            three-address code only (default)\n"
             "  --opt            full optimisation passes after TAC\n"
             "  --check          semantic check only (no IR)\n"
-            "  --emit-llvm[=F]  emit LLVM IR from the optimised TAC (Module 8 backend)\n"
-            "                    Writes to F if given, otherwise to stdout.\n",
+            "  --emit-llvm[=F]  emit LLVM IR from the (possibly optimised) TAC\n"
+            "                    Writes to F if given, otherwise to stdout.\n"
+            "                    Combine with --opt to lower the optimised TAC.\n",
             argv0);
 }
 
@@ -61,7 +62,6 @@ int main(int argc, char **argv) {
         }
         if (strncmp(argv[i], "--emit-llvm", 11) == 0) {
             emit_llvm = 1;
-            opt_opt = 1;
             if (argv[i][11] == '=' && argv[i][12])
                 llvm_out_path = &argv[i][12];
             else if (argv[i][11] == '\0' && i + 1 < argc && argv[i + 1][0] != '-' &&
@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
 
     if (pipeline) {
         opt_opt = 1;
+        emit_llvm = 1;
         tokens_only = 0;
         check_only = 0;
         if (!path) {

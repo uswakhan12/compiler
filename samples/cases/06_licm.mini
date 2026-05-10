@@ -2,7 +2,7 @@ int n;
 int i;
 int s;
 int k;
-n = 10;
+n = 200000000;
 k = 3;
 i = 0;
 s = 0;

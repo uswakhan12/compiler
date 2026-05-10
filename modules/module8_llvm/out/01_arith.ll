@@ -14,16 +14,17 @@ entry:
   %t0 = alloca i32
   %t1 = alloca i32
   %t2 = alloca i32
-  store i32 6, i32* %t0
-  %ld.0 = load i32, i32* %t0
-  %v.1 = add i32 1, %ld.0
-  store i32 %v.1, i32* %t1
-  %ld.2 = load i32, i32* %t1
-  store i32 %ld.2, i32* %a
-  %ld.3 = load i32, i32* %a
-  %v.4 = sub i32 %ld.3, 4
-  store i32 %v.4, i32* %t2
-  %ld.5 = load i32, i32* %t2
-  store i32 %ld.5, i32* %b
+  %v.0 = mul i32 2, 3
+  store i32 %v.0, i32* %t0
+  %ld.1 = load i32, i32* %t0
+  %v.2 = add i32 1, %ld.1
+  store i32 %v.2, i32* %t1
+  %ld.3 = load i32, i32* %t1
+  store i32 %ld.3, i32* %a
+  %ld.4 = load i32, i32* %a
+  %v.5 = sub i32 %ld.4, 4
+  store i32 %v.5, i32* %t2
+  %ld.6 = load i32, i32* %t2
+  store i32 %ld.6, i32* %b
   ret i32 0
 }

@@ -44,25 +44,26 @@ cont.6:
   %ld.10 = load i32, i32* %t1
   %gep.11 = getelementptr [5 x i32], [5 x i32]* %a, i32 0, i32 %ld.9
   store i32 %ld.10, i32* %gep.11
-  %ld.12 = load i32, i32* %t1
-  store i32 %ld.12, i32* %t2
-  %ld.13 = load i32, i32* %t2
-  store i32 %ld.13, i32* %i
+  %ld.12 = load i32, i32* %i
+  %v.13 = add i32 %ld.12, 1
+  store i32 %v.13, i32* %t2
+  %ld.14 = load i32, i32* %t2
+  store i32 %ld.14, i32* %i
   br label %L0
-post.14:
+post.15:
   br label %L1
 L1:
-  %gep.15 = getelementptr [5 x i32], [5 x i32]* %a, i32 0, i32 0
-  %ald.16 = load i32, i32* %gep.15
-  store i32 %ald.16, i32* %t3
-  %gep.17 = getelementptr [5 x i32], [5 x i32]* %a, i32 0, i32 4
-  %ald.18 = load i32, i32* %gep.17
-  store i32 %ald.18, i32* %t4
-  %ld.19 = load i32, i32* %t3
-  %ld.20 = load i32, i32* %t4
-  %v.21 = add i32 %ld.19, %ld.20
-  store i32 %v.21, i32* %t5
-  %ld.22 = load i32, i32* %t5
-  store i32 %ld.22, i32* %s
+  %gep.16 = getelementptr [5 x i32], [5 x i32]* %a, i32 0, i32 0
+  %ald.17 = load i32, i32* %gep.16
+  store i32 %ald.17, i32* %t3
+  %gep.18 = getelementptr [5 x i32], [5 x i32]* %a, i32 0, i32 4
+  %ald.19 = load i32, i32* %gep.18
+  store i32 %ald.19, i32* %t4
+  %ld.20 = load i32, i32* %t3
+  %ld.21 = load i32, i32* %t4
+  %v.22 = add i32 %ld.20, %ld.21
+  store i32 %v.22, i32* %t5
+  %ld.23 = load i32, i32* %t5
+  store i32 %ld.23, i32* %s
   ret i32 0
 }

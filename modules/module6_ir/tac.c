@@ -145,7 +145,9 @@ void tac_print(const TacProgram *p) {
                    in->result ? in->result : "_");
             break;
         case TAC_OP_CALL:
-            printf("%s = call %s\n", in->result ? in->result : "_", in->arg1 ? in->arg1 : "");
+            printf("%s = call %s, %s\n", in->result ? in->result : "_",
+                   in->arg1 ? in->arg1 : "",
+                   in->arg2 ? in->arg2 : "0");
             break;
         case TAC_OP_PARAM:
             printf("param %s\n", in->arg1 ? in->arg1 : "");

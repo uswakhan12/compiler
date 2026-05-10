@@ -15,36 +15,36 @@ entry:
   store i32 0, i32* %i
   %n = alloca i32
   store i32 0, i32* %n
-  %t1 = alloca i32
   %t0 = alloca i32
+  %t1 = alloca i32
   %t2 = alloca i32
   %t3 = alloca i32
-  store i32 10, i32* %n
+  store i32 200000000, i32* %n
   store i32 3, i32* %k
   store i32 0, i32* %i
   store i32 0, i32* %s
-  %ld.0 = load i32, i32* %k
-  %v.1 = mul i32 %ld.0, 4
-  store i32 %v.1, i32* %t1
   br label %L0
 L0:
-  %ld.2 = load i32, i32* %i
-  %ld.3 = load i32, i32* %n
-  %c.4 = icmp slt i32 %ld.2, %ld.3
-  br i1 %c.4, label %L2, label %cont.5
-cont.5:
+  %ld.0 = load i32, i32* %i
+  %ld.1 = load i32, i32* %n
+  %c.2 = icmp slt i32 %ld.0, %ld.1
+  br i1 %c.2, label %L2, label %cont.3
+cont.3:
   store i32 0, i32* %t0
   br label %L3
-post.6:
+post.4:
   br label %L2
 L2:
   store i32 1, i32* %t0
   br label %L3
 L3:
-  %ld.7 = load i32, i32* %t0
-  %c.8 = icmp eq i32 %ld.7, 0
-  br i1 %c.8, label %L1, label %cont.9
-cont.9:
+  %ld.5 = load i32, i32* %t0
+  %c.6 = icmp eq i32 %ld.5, 0
+  br i1 %c.6, label %L1, label %cont.7
+cont.7:
+  %ld.8 = load i32, i32* %k
+  %v.9 = mul i32 %ld.8, 4
+  store i32 %v.9, i32* %t1
   %ld.10 = load i32, i32* %s
   %ld.11 = load i32, i32* %t1
   %v.12 = add i32 %ld.10, %ld.11
