@@ -403,6 +403,12 @@ void emit_llvm_ir(FILE *out, AstNode *program, TacProgram *tac) {
         case TAC_OP_CAST_INT_TO_FLOAT:
             emit_cast(out, in);
             break;
+        case TAC_OP_ARR_LOAD:
+            emit_arr_load(out, in);
+            break;
+        case TAC_OP_ARR_STORE:
+            emit_arr_store(out, in);
+            break;
         default:
             fprintf(out, "  ; (skipping unsupported TAC op: id=%d)\n", in->id);
             break;
