@@ -82,6 +82,15 @@ static int lookup_is_float(const char *name) {
     return 0;
 }
 
+static VarTy *lookup_var(const char *name) {
+    if (!name)
+        return NULL;
+    for (VarTy *v = g_vars; v; v = v->next)
+        if (strcmp(v->name, name) == 0)
+            return v;
+    return NULL;
+}
+
 static int is_number_literal(const char *s) {
     if (!s || !*s)
         return 0;
@@ -124,9 +133,14 @@ static void emit_prelude(FILE *out) {
 
 static void emit_alloca_for_locals(FILE *out, TacProgram *tac) {
     for (VarTy *v = g_vars; v; v = v->next) {
-        fprintf(out, "  %%%s = alloca %s\n", v->name, v->is_float ? "double" : "i32");
-        fprintf(out, "  store %s %s, %s* %%%s\n", v->is_float ? "double" : "i32",
-                v->is_float ? "0.000000e+00" : "0", v->is_float ? "double" : "i32", v->name);
+        const char *elt = v->is_float ? "double" : "i32";
+        if (v->array_size > 0) {
+            fprintf(out, "  %%%s = alloca [%d x %s]\n", v->name, v->array_size, elt);
+        } else {
+            fprintf(out, "  %%%s = alloca %s\n", v->name, elt);
+            fprintf(out, "  store %s %s, %s* %%%s\n", elt, v->is_float ? "0.000000e+00" : "0",
+                    elt, v->name);
+        }
     }
     /* Temps */
     for (TacInst *in = tac->head; in; in = in->next) {
@@ -306,6 +320,45 @@ static void emit_cast(FILE *out, TacInst *in) {
     emit_store(out, in->result, res, 1);
     free(v);
     free(res);
+}
+
+/* result = arr[idx] */
+static void emit_arr_load(FILE *out, TacInst *in) {
+    VarTy *arr = lookup_var(in->arg1);
+    if (!arr) {
+        fprintf(out, "  ; (array load: unknown array %s)\n", in->arg1 ? in->arg1 : "?");
+        return;
+    }
+    const char *elt = arr->is_float ? "double" : "i32";
+    char *idx = emit_load(out, in->arg2, 0);
+    char *gep = fresh_ssa("gep");
+    fprintf(out, "  %s = getelementptr [%d x %s], [%d x %s]* %%%s, i32 0, i32 %s\n", gep,
+            arr->array_size, elt, arr->array_size, elt, in->arg1, idx);
+    char *ld = fresh_ssa("ald");
+    fprintf(out, "  %s = load %s, %s* %s\n", ld, elt, elt, gep);
+    emit_store(out, in->result, ld, arr->is_float);
+    free(idx);
+    free(gep);
+    free(ld);
+}
+
+/* arr[idx] = rhs  (result holds arr name, arg1=idx, arg2=rhs) */
+static void emit_arr_store(FILE *out, TacInst *in) {
+    VarTy *arr = lookup_var(in->result);
+    if (!arr) {
+        fprintf(out, "  ; (array store: unknown array %s)\n", in->result ? in->result : "?");
+        return;
+    }
+    const char *elt = arr->is_float ? "double" : "i32";
+    char *idx = emit_load(out, in->arg1, 0);
+    char *val = emit_load(out, in->arg2, arr->is_float);
+    char *gep = fresh_ssa("gep");
+    fprintf(out, "  %s = getelementptr [%d x %s], [%d x %s]* %%%s, i32 0, i32 %s\n", gep,
+            arr->array_size, elt, arr->array_size, elt, in->result, idx);
+    fprintf(out, "  store %s %s, %s* %s\n", elt, val, elt, gep);
+    free(idx);
+    free(val);
+    free(gep);
 }
 
 void emit_llvm_ir(FILE *out, AstNode *program, TacProgram *tac) {
