@@ -1,12 +1,26 @@
 int n;
 int i;
 int s;
-int k;
+int a;
+int b;
+int c;
+int d;
+int e;
+int f;
+int g;
+int h;
 n = 200000000;
-k = 3;
+a = 2;
+b = 3;
+c = 4;
+d = 5;
+e = 6;
+f = 7;
+g = 8;
+h = 9;
 i = 0;
 s = 0;
 while (i < n) {
-    s = s + (k * 4);
+    s = s + a * b * c * d * e * f * g * h;
     i = i + 1;
 }

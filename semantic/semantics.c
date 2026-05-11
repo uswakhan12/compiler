@@ -3,12 +3,26 @@
 #include "symtab.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int errors = 0;
 
 static void sem_err(int line, const char *msg) {
     fprintf(stderr, "semantic error near line %d: %s\n", line, msg);
     errors++;
+}
+
+/* If the named symbol exists and its mangled emission name differs from
+   the AST node's stored name, rewrite the node so codegen emits the
+   mangled (shadow-aware) name into TAC. */
+static void rewrite_name(char **slot) {
+    if (!slot || !*slot)
+        return;
+    Symbol *s = symtab_lookup(*slot);
+    if (!s || !s->mangled || strcmp(*slot, s->mangled) == 0)
+        return;
+    free(*slot);
+    *slot = strdup(s->mangled);
 }
 
 static ValueType check_expr(AstNode *e);
@@ -30,6 +44,7 @@ static ValueType check_expr(AstNode *e) {
             e->inferred_type = TYPE_INT;
             return TYPE_INT;
         }
+        rewrite_name(&e->u.var.name);
         e->inferred_type = s->type;
         return s->type;
     }
@@ -40,6 +55,7 @@ static ValueType check_expr(AstNode *e) {
             e->inferred_type = TYPE_INT;
             return TYPE_INT;
         }
+        rewrite_name(&e->u.arr_index.name);
         ValueType it = check_expr(e->u.arr_index.index);
         if (it != TYPE_INT)
             sem_err(e->line, "array index must be an integer");
@@ -80,18 +96,32 @@ static void check_stmt(AstNode *s) {
     if (!s)
         return;
     switch (s->kind) {
-    case AST_DECL:
-        if (!symtab_insert(s->u.decl.name, s->u.decl.decl_type))
+    case AST_DECL: {
+        Symbol *sym = symtab_insert(s->u.decl.name, s->u.decl.decl_type);
+        if (!sym) {
             sem_err(s->line, "redeclaration in same scope");
+        } else if (sym->mangled && strcmp(sym->mangled, s->u.decl.name) != 0) {
+            free(s->u.decl.name);
+            s->u.decl.name = strdup(sym->mangled);
+        }
         break;
-    case AST_ARR_DECL:
-        if (!symtab_insert(s->u.arr_decl.name, s->u.arr_decl.elem_type))
+    }
+    case AST_ARR_DECL: {
+        Symbol *sym = symtab_insert(s->u.arr_decl.name, s->u.arr_decl.elem_type);
+        if (!sym) {
             sem_err(s->line, "redeclaration in same scope");
+        } else if (sym->mangled && strcmp(sym->mangled, s->u.arr_decl.name) != 0) {
+            free(s->u.arr_decl.name);
+            s->u.arr_decl.name = strdup(sym->mangled);
+        }
         break;
+    }
     case AST_ARR_ASSIGN: {
         Symbol *sym = symtab_lookup(s->u.arr_assign.name);
         if (!sym)
             sem_err(s->line, "assignment to undeclared array");
+        else
+            rewrite_name(&s->u.arr_assign.name);
         ValueType it = check_expr(s->u.arr_assign.index);
         if (it != TYPE_INT)
             sem_err(s->line, "array index must be an integer");
@@ -104,6 +134,8 @@ static void check_stmt(AstNode *s) {
         Symbol *sym = symtab_lookup(s->u.assign.name);
         if (!sym)
             sem_err(s->line, "assignment to undeclared variable");
+        else
+            rewrite_name(&s->u.assign.name);
         ValueType rhs = check_expr(s->u.assign.expr);
         if (sym && sym->type == TYPE_INT && rhs == TYPE_FLOAT)
             sem_err(s->line, "type mismatch: cannot assign float to int");

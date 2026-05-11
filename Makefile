@@ -67,17 +67,29 @@ $(BUILD)/minicc.tab.c $(BUILD)/minicc.tab.h: $(PAR)/minicc.y | dirs
 $(BUILD)/lex.minicc.c: $(LEX)/lexer.l $(BUILD)/minicc.tab.h | dirs
 	$(FLEX) -o $(BUILD)/lex.minicc.c $(LEX)/lexer.l
 
+# Module 7 is split into one .c per pass (Task 1 "Refactoring");
+# adding a new technique = one new file + one orchestrator call.
+OPT_SRCS := $(OPT)/optimize.c \
+            $(OPT)/opt_util.c \
+            $(OPT)/constant_propagation.c \
+            $(OPT)/constant_folding.c \
+            $(OPT)/algebraic.c \
+            $(OPT)/cse.c \
+            $(OPT)/unreachable.c \
+            $(OPT)/licm.c \
+            $(OPT)/dead_code.c
+
 minicc: $(BUILD)/lex.minicc.c $(BUILD)/minicc.tab.c \
         $(SEM)/ast.c $(SEM)/symtab.c $(SEM)/semantics.c \
         $(IR)/tac.c $(IR)/codegen.c \
-        $(OPT)/optimize.c \
+        $(OPT_SRCS) \
         $(LLVM)/llvm_emit.c \
         src/main.c src/token_dump.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o minicc \
 		$(BUILD)/lex.minicc.c $(BUILD)/minicc.tab.c \
 		$(SEM)/ast.c $(SEM)/symtab.c $(SEM)/semantics.c \
 		$(IR)/tac.c $(IR)/codegen.c \
-		$(OPT)/optimize.c \
+		$(OPT_SRCS) \
 		$(LLVM)/llvm_emit.c \
 		src/main.c src/token_dump.c \
 		$(LDLIBS)
